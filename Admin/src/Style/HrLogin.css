@@ -3,11 +3,9 @@
 }
 
 .LoginFields{
-
 }
 
 .LoginBox{
-    background-color: grey;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,6 +13,28 @@
     width: 100vw;
 }
 
-.CompanyName{
-    
+.InputField{
+    height: 30px;
+    background-color: #fff;
+    color: #242424;
+    outline: none;
+    border: none;
+}
+
+.InputField:active{
+    outline: none;
+}
+
+.LoginHead{
+    background-color: #d9d9d9;
+    width: 20%;
+    height: 35%;
+}
+
+.LoginButton{
+    background-color: #945757;
+    height: 30px;
+    width: 70px;
+    border-width: 0px;
+    border-radius: 10px;
 }
