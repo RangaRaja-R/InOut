@@ -2,13 +2,13 @@ import axios from "axios";
 import { API_URL } from "../store";
 
 class AuthService{
-    AuthService(){
-        this.axios = axios({
+    constructor(){
+        this.axios = axios.create({
             withCredentials:true
         })
     }
     login(email,password){
-        return axios.post(API_URL+'/company/login',{
+        return this.axios.post(API_URL+'/company/login',{
             email,
             password
         })
