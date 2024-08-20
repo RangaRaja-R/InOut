@@ -1,0 +1,28 @@
+.CompanyName{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 30px;
+}
+
+.Navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.RightContent{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 150px;
+}
+
+.logOut{
+    height: 40px;
+    width: 70px;
+    font-size: medium;
+}
+
+.UserName{
+    text-transform: capitalize; 
+    font-weight: bold;
+}
