@@ -98,6 +98,8 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = 'attendance.User'
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
