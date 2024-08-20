@@ -54,7 +54,7 @@ def login(request):
     user = User.objects.filter(email=email).first()
 
     if user is None:
-        return Response({'message': 'User not found'}, status=404)
+        return Response({'message': 'User not found'}, status=400)
 
     if not user.check_password(password):
         return Response({'message': 'Incorrect password'}, status=400)
