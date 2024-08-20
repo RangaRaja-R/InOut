@@ -47,12 +47,13 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/profileImageView"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_gravity="end"
-                android:src="@drawable/ic_profile_placeholder"
-            android:layout_marginStart="auto"
-            android:contentDescription="Profile Image"/>
+                android:layout_height="87dp"
+                android:layout_marginLeft="180dp"
+                android:layout_marginBottom="20dp"
+                android:contentDescription="Profile Image"
+                android:src="@drawable/img_1" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
