@@ -1,4 +1,4 @@
-import Serv from '../Services/AuthService';
+import Serv from '../Services/UserService';
 const serv=Serv;
 
 

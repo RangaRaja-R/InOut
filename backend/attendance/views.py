@@ -78,7 +78,7 @@ def logout(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def all(request):
     employees = Employee.objects.all()
     serializer = EmployeeSerializer(employees, many=True)

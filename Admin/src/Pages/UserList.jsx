@@ -4,20 +4,36 @@ import { getAllUsers } from '../Redux/actions/UserListAction';
 
 function UserList() {
   const dispatch=useDispatch();
-  const selector=useSelector(state=>state.users);
+  const selector=useSelector(state=>state.user);
+  const userlist=useSelector(state=>state.users);
   useEffect(()=>{
-    dispatch(getAllUsers());
+    if(selector.user){
 
+      dispatch(getAllUsers());
+    }
   },[])
-  if(selector.users){
-    console.log(selector.users);
-  }
+  
   return (
     <div>
           <div><h2>Employee List</h2></div>
-          
+          <div><button>Add User</button></div>
+          <div>
+
+          {userlist.users?
+              userlist.users.map((u,index)=>{
+                return (
+                  <div key={index}>
+                  <p>{u.user.name}</p>
+                  <p>{u.user.email}</p>
+                  <button>Off Site</button>
+                  </div>
+                )
+              }):<div>Loading</div>
+          }
+          </div>
 
     </div>
+  
   )
 }
 

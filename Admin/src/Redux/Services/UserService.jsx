@@ -1,12 +1,12 @@
 import {API_URL} from '../store';
-import axios from 'axios'
+import axios from 'axios';
 class UserListService{
-    UserListService(){
-        this.axios = axios({
+    constructor(){
+        this.apiUrl = API_URL;
+        this.axios = axios.create({
             withCredentials:true
         })
-    }
-
+        }
     postUser(data){
         return axios.post(API_URL + '' ,
             data,
@@ -25,6 +25,15 @@ class UserListService{
             }
         }
         )
+    }
+    login(email,password){
+        return axios.post(API_URL+'/company/login',{
+            email,
+            password
+        })
+    }
+    logout(){
+        return axios.post(API_URL+'/company/logout');
     }
 
 }
