@@ -4,9 +4,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from datetime import datetime, timezone, timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import *
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer, EmployeeSerializer
 from .utils import *
 
@@ -62,7 +62,9 @@ def login(request):
     refresh = RefreshToken.for_user(user)
     access_token = str(refresh.access_token)
 
-    response = Response({'message': 'success'})
+    user.password = None
+    serializer = UserSerializer(user)
+    response = Response(serializer.data)
     response.set_cookie(key="jwt", value=access_token, httponly=True, samesite='None', secure=True)
     return response
 
@@ -70,9 +72,9 @@ def login(request):
 @api_view(['POST'])
 def logout(request):
     response = Response()
+    response.data = {'message': 'success'}
     response.delete_cookie(key="jwt")
-    response.delete_cookie(key="refresh_token")
-    return Response({'message': 'success'}, status=status.HTTP_200_OK)
+    return response
 
 
 @api_view(['GET'])
@@ -81,7 +83,6 @@ def all(request):
     employees = Employee.objects.all()
     serializer = EmployeeSerializer(employees, many=True)
     return Response(serializer.data)
-
 
 
 @api_view(['POST'])

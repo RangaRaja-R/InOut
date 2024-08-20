@@ -86,9 +86,9 @@ DATABASES = {
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES':(
         'attendance.Authentication.JWTAuthenticationFromCookie',
-    ),
+    )
 }
 
 SIMPLE_JWT = {
