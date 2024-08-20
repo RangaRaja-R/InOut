@@ -8,7 +8,7 @@ class AuthService{
         })
     }
     login(email,password){
-        return axios.post(API_URL+'',{
+        return axios.post(API_URL+'/company/login',{
             email,
             password
         })

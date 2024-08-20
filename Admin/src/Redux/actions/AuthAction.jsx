@@ -3,6 +3,7 @@ const serv=Serv;
 
 
 export const login=(data)=>async(dispatch,getState)=>{
+    console.log("level 1");
     try{
         const res=await serv.login(data.email,data.password);
         dispatch({type:"SET_USER",payload:res.data});

@@ -14,6 +14,7 @@ function HrLogin() {
   const handleSubmit=(e)=>{
     e.preventDefault();
     dispatch(login(data));
+    // navi("/user-list") 
 
   }
   return (
@@ -23,7 +24,7 @@ function HrLogin() {
         <form onSubmit={handleSubmit}>
           <input type='email' onChange={(e)=>setData({...data,email:e.target.value})}/>
           <input type='text' onChange={(e)=>setData({...data,password:e.target.value})}/>
-    <button onClick={()=>navi("/user-list") } type='submit' >Login</button>
+    <button type='submit' >Login</button>
         </form>
     </div>
 
