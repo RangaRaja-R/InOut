@@ -14,8 +14,6 @@
         android:background="#A38181"
         app:layout_constraintTop_toTopOf="parent" />
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -45,24 +43,32 @@
                     android:layout_marginEnd="8dp"/>
 
             </LinearLayout>
-
+            <ImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="80dp"
+                android:layout_height="87dp"
+                android:layout_marginLeft="180dp"
+                android:layout_marginBottom="20dp"
+                android:contentDescription="Profile Image"
+                android:src="@drawable/img_1" />
 
         </LinearLayout>
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_width="378dp"
+            android:layout_height="146dp"
             android:layout_marginTop="32dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_verify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Verify"
                 android:layout_marginEnd="16dp"
                 android:backgroundTint="#000000"
-                android:textColor="#FFFFFF"/>
+                android:text="Verify"
+                android:textColor="#FFFFFF" />
 
 
         </LinearLayout>
