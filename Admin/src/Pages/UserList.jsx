@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllUsers } from '../Redux/actions/UserListAction';
+import '../Style/UserList.css'
 
 function UserList() {
   const dispatch=useDispatch();
@@ -9,7 +10,7 @@ function UserList() {
   useEffect(()=>{
     if(selector.user){
 
-      dispatch(getAllUsers());
+      dispatch(getAllUsers());  
     }
   },[])
   
@@ -22,7 +23,7 @@ function UserList() {
           {userlist.users?
               userlist.users.map((u,index)=>{
                 return (
-                  <div key={index}>
+                  <div className='details' key={index}>
                   <p>{u.user.name}</p>
                   <p>{u.user.email}</p>
                   <button>Off Site</button>

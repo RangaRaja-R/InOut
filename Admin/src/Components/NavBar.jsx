@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../Redux/actions/AuthAction';
+import '../Style/NavBar.css';
 
 function NavBar() {
     const selector = useSelector(state => state.user);
@@ -8,10 +9,21 @@ function NavBar() {
     const HandleLogout=()=>{
             dispatch(logout());
     }
+    // text-transform:capitalise
   return (<>
 
-    <div>NavBar</div>
-    {(selector.user)?<div>{selector.user.name}<button onClick={HandleLogout}>logout</button></div>:<></>}
+    <div className='Navbar'>
+    <div className='CompanyName'>INOUT</div>
+    <div>
+    {(selector.user)?
+      <div className='RightContent'>
+      <div className='UserName'>{selector.user.name}
+      </div>
+      <button onClick={HandleLogout} className='logOut'>Logout</button></div>
+      :
+      <></>}
+    </div>
+    </div>
   </>
   )
 }
