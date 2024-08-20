@@ -15,6 +15,11 @@ const AuthReducer=(state=initialState,action)=>{
                 ...state,
                 userType:action.payload
             }
+        case "LOG_OUT":
+            return{
+                user:null,
+                userType:null
+            }
         default:
             return state;
     }

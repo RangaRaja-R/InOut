@@ -14,7 +14,7 @@ class UserListService{
     }
 
     getAllUsers(){
-        return axios.get(API_URL);
+        return axios.get(API_URL+'/all');
     }
 
     addOffSite(data,uid){

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { useDispatch} from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 import { login } from '../Redux/actions/AuthAction';
 import '../Style/HrLogin.css';
 
 
 function HrLogin() {
   const dispatch=useDispatch();
+  const selector=useSelector(state=>state.user);
   const [data,setData]=useState({
     email: "",
     password: "",
@@ -14,19 +15,21 @@ function HrLogin() {
   const navi=useNavigate();
   const handleSubmit=(e)=>{
     e.preventDefault();
+    
     dispatch(login(data));
-    // navi("/user-list") 
-
+    
   }
+  if(selector.user!==null){
+   navi("/user-list")} 
   return (
       <div className='LoginBox'>
         <div className='LoginHead'>
           <h2>Login</h2>
           <div className='LoginFields'>
           <form onSubmit={handleSubmit}>
-          <input className='InputField' type='email' onChange={(e)=>setData({...data,email:e.target.value})} placeholder='USERNAME'/>
+          <input className='InputField' type='email' onChange={(e)=>setData({...data,email:e.target.value})} placeholder='USERNAME' required/>
           <br /><br />
-          <input className='InputField' type='text' onChange={(e)=>setData({...data,password:e.target.value})} placeholder='PASSWORD'/>
+          <input className='InputField' type='text' onChange={(e)=>setData({...data,password:e.target.value})} placeholder='PASSWORD' required/>
           <br /><br />
           <button type='submit' className='LoginButton'>Login</button>
           </form>

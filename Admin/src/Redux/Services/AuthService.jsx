@@ -13,5 +13,8 @@ class AuthService{
             password
         })
     }
+    logout(){
+        return this.axios.post(API_URL+'/company/logout');
+    }
 }
 export default new AuthService();

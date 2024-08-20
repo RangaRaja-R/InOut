@@ -13,3 +13,12 @@ export const login=(data)=>async(dispatch,getState)=>{
         console.log(er);
     }
 }
+export const logout=()=>async(dispatch,getState)=>{
+    try{
+        const res=await serv.logout();
+        dispatch({type:"LOG_OUT",payload:null});
+    }
+    catch(er){
+        console.log(er);
+    }
+}

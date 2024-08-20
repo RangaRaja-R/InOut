@@ -5,9 +5,13 @@ import Home from './Pages/Home'
 import HrLogin from './Pages/HrLogin'
 import DepartmentList from './Pages/DepartmentList'
 import UserList from './Pages/UserList'
+import NavBar from './Components/NavBar'
 
 function Routing() {
   return (
+    <>
+
+    <NavBar/>
    <Routes>
     <Route path="/" element={<Home />} />
     <Route path="/admin-sign-in" element={<AdminLogin />} />
@@ -15,6 +19,7 @@ function Routing() {
     <Route path="/department-list" element={<DepartmentList/>}/>
     <Route path="/user-list" element={<UserList/>}/>
    </Routes>
+    </>
   )
 }
 
