@@ -1,6 +1,7 @@
 package com.example.androidfront
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -33,8 +34,7 @@ class LoginActivity : AppCompatActivity() {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                val backendUrl = "http://your-backend-url.com" // Replace with the backend URL from input
-
+                val backendUrl = "" // Replace with the backend URL from input
                 performLogin(email, password, backendUrl,
                     onSuccess = { token ->
                         // Save the JWT token and navigate to the dashboard
@@ -77,9 +77,10 @@ class LoginActivity : AppCompatActivity() {
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val requestBody = RequestBody.create(mediaType, json.toString())
         // val requestBody = RequestBody.create(MediaType.get("application/json; charset=utf-8"), json)
-
+        val sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val backendUrl = sharedPreferences.getString("backend_url", "")
         val request = Request.Builder()
-            .url("$backendUrl/api/login/") // Adjust the endpoint as per your backend
+            .url("$backendUrl/login") // Adjust the endpoint as per your backend
             .post(requestBody)
             .build()
 
@@ -114,11 +115,6 @@ class LoginActivity : AppCompatActivity() {
             putString("jwt_token", token)
             apply()
         }
-    }
-
-    fun getJwtToken(): String? {
-        val sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
-        return sharedPreferences.getString("jwt_token", null)
     }
 
 }

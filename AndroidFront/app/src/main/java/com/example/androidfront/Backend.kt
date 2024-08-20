@@ -7,6 +7,8 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import android.content.Context
+import com.example.androidfront.LoginActivity
+import com.example.androidfront.DashboardActivity
 
 class BackendUrlActivity : AppCompatActivity() {
 
@@ -38,7 +40,7 @@ class BackendUrlActivity : AppCompatActivity() {
     private fun checkLoginStatus() {
         val sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("jwt_token", null)
-
+        val backendUrl = sharedPreferences.getString("backend_url", "where?")
         if (token == null) {
             // No token, navigate to the Login screen
             val intent = Intent(this, LoginActivity::class.java)
@@ -49,5 +51,14 @@ class BackendUrlActivity : AppCompatActivity() {
             startActivity(intent)
         }
         finish() // Close the current activity
+    }
+    private fun showAlert(title: String, message: String) {
+        android.app.AlertDialog.Builder(this).apply {
+            setTitle(title)
+            setMessage(message)
+            setPositiveButton("OK", null)
+            create()
+            show()
+        }
     }
 }
