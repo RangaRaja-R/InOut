@@ -1,26 +1,24 @@
-package com.inout
+package com.example.androidfront;
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.widget.Button
-import android.app.AlertDialog
 import android.widget.EditText
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import android.widget.Toast
+import android.content.Context
 
-class MainActivity : AppCompatActivity() {
+class BackendUrlActivity : AppCompatActivity() {
+
     private lateinit var urlInput: EditText
     private lateinit var saveButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.api_url)  // Ensure the layout file name is correct
+        setContentView(R.layout.activity_api)
 
-        urlInput = this.findViewById(R.id.api_url)
-        saveButton = this.findViewById(R.id.btn_connect)
+        urlInput = findViewById(R.id.api_url)
+        saveButton = findViewById(R.id.btn_connect)
 
         saveButton.setOnClickListener {
             val backendUrl = urlInput.text.toString()
@@ -35,7 +33,21 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter a valid URL", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
+    private fun checkLoginStatus() {
+        val sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("jwt_token", null)
+
+        if (token == null) {
+            // No token, navigate to the Login screen
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        } else {
+            // Token exists, navigate to the Dashboard
+            val intent = Intent(this, DashboardActivity::class.java)
+            startActivity(intent)
+        }
+        finish() // Close the current activity
+    }
 }
