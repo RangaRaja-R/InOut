@@ -9,7 +9,6 @@ function AddUser() {
           <label>Username:</label>
           <input type="text" />
           <input email="text" />
-          
           <input type='pass'/>
         </form>
       </div>

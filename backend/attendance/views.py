@@ -129,9 +129,11 @@ def check_out(request):
 
 @api_view(['POST'])
 def offsite(request):
-    employee = Employee.objects.filter(user=request.user).first()
+    if not request.data['email']:
+        return Response({'message': "email is required"}, status=status.HTTP_400_BAD_REQUEST)
+    employee = Employee.objects.filter(user_id=request.data['email']).first()
     if employee is None:
-        return Response({'message': 'User not found'}, status=404)
+        return Response({'message': 'User not found'}, status=400)
     offsite = Offsite()
     offsite.latitude = request.data['latitude']
     offsite.longitude = request.data['longitude']

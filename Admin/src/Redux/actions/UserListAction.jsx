@@ -30,9 +30,9 @@ export const getAllUsers=()=>async(dispatch,getstate)=>{
         console.log(er);
     }
 }
-export const addOffSite=(data,uid)=>async(dispatch,getstate)=>{
+export const addOffSite=(data)=>async(dispatch,getstate)=>{
     try{
-        const response = await serv.addOffSite(data,uid);
+        const response = await serv.addOffSite(data);
         if(response.status === 201){
             getAllUsers();
             }
