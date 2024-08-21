@@ -5,7 +5,7 @@ export const postUser=(data)=>async (dispatch,getstate)=>{
     try{
         const response = await serv.postUser(data);
         if(response.status === 201){
-            getAllUsers();
+            dispatch(getAllUsers());
         }
         else{
             console.log("error on post");
@@ -34,7 +34,7 @@ export const addOffSite=(data)=>async(dispatch,getstate)=>{
     try{
         const response = await serv.addOffSite(data);
         if(response.status === 201){
-            getAllUsers();
+            dispatch(getAllUsers());
             }
         
     }
