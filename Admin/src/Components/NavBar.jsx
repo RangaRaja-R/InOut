@@ -2,12 +2,15 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../Redux/actions/AuthAction';
 import '../Style/NavBar.css';
+import { useNavigate } from 'react-router-dom'
 
 function NavBar() {
     const selector = useSelector(state => state.user);
     const dispatch=useDispatch();
+    const navi = useNavigate();
     const HandleLogout=()=>{
-            dispatch(logout());
+      dispatch(logout());
+      navi('/')
     }
     // text-transform:capitalise
   return (<>
