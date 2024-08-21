@@ -7,8 +7,8 @@ function Home() {
     const navi=useNavigate();
   return (
     <div>Home
-    <button onClick={()=>navi("/admin-sign-in")}>AdminLogin</button>
-    <button onClick={()=>navi("/hr-sign-in")}>Hr Login</button>
+    <button onClick={()=>{navi("/admin-sign-in")}}>AdminLogin</button>
+    <button onClick={()=>{navi("/hr-sign-in")}}>Hr Login</button>
     
 
     </div>

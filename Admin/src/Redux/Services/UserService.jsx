@@ -8,7 +8,7 @@ class UserListService{
         })
         }
     postUser(data){
-        return axios.post(API_URL + '' ,
+        return axios.post(API_URL +'/register',
             data,
         )
     }
