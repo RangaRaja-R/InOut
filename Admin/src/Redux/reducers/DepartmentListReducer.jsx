@@ -17,6 +17,11 @@ export default function departmentListReducer( state=initialState, action) {
                 deplist: action.payload,
                 loading: false,
             }
+        case "EMPTY_DEP":
+            return{
+                deplist:[],
+                loading:false,
+            }
         default:
             return state;
     }

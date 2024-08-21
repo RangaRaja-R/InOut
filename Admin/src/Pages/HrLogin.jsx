@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector} from "react-redux";
 import { login } from '../Redux/actions/AuthAction';
 import '../Style/HrLogin.css';
+import Init from '../Components/Init';
 
 
 function HrLogin() {
@@ -18,6 +19,7 @@ function HrLogin() {
     
     dispatch(login(data));
     
+    
   }
   if(selector.user!==null){
    navi("/user-list")} 
@@ -29,7 +31,7 @@ function HrLogin() {
           <form onSubmit={handleSubmit}>
           <input className='InputField' type='email' onChange={(e)=>setData({...data,email:e.target.value})} placeholder='USERNAME' required/>
           <br /><br />
-          <input className='InputField' type='text' onChange={(e)=>setData({...data,password:e.target.value})} placeholder='PASSWORD' required/>
+          <input className='InputField' type='password' onChange={(e)=>setData({...data,password:e.target.value})} placeholder='PASSWORD' required/>
           <br /><br />
           <button type='submit' className='LoginButton'>Login</button>
           </form>

@@ -8,7 +8,7 @@ class UserListService{
         })
         }
     postUser(data){
-        return axios.post(API_URL + '' ,
+        return axios.post(API_URL +'/register',
             data,
         )
     }
@@ -17,23 +17,12 @@ class UserListService{
         return axios.get(API_URL+'/all');
     }
 
-    addOffSite(data,uid){
-        return axios.post(API_URL,
-            data,{
-            params: {
-                userid:uid
-            }
-        }
-        )
-    }
-    login(email,password){
-        return axios.post(API_URL+'/company/login',{
-            email,
-            password
-        })
-    }
-    logout(){
-        return axios.post(API_URL+'/company/logout');
+    
+    
+    addOffSite(data){
+        return axios.post(API_URL+'/offsite',
+            data
+        );
     }
 
 }

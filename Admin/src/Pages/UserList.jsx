@@ -2,8 +2,10 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllUsers } from '../Redux/actions/UserListAction';
 import '../Style/UserList.css'
+import { useNavigate } from 'react-router-dom';
 
 function UserList() {
+  const navi=useNavigate();
   const dispatch=useDispatch();
   const selector=useSelector(state=>state.user);
   const userlist=useSelector(state=>state.users);
@@ -14,10 +16,18 @@ function UserList() {
     }
   },[])
   
+
+  const HandleOffSite=(email,e)=>{
+    
+      navi("/offsite", {state:{email}});
+  }
+  const HandleAddUser=()=>{
+    navi("/add-user");
+  }
   return (
     <div>
           <div><h2>Employee List</h2></div>
-          <div><button>Add User</button></div>
+          <div><button onClick={HandleAddUser}>Add User</button></div>
           <div>
 
           {userlist.users?
@@ -26,7 +36,7 @@ function UserList() {
                   <div className='details' key={index}>
                   <p>{u.user.name}</p>
                   <p>{u.user.email}</p>
-                  <button>Off Site</button>
+                  <button onClick={()=>{HandleOffSite(u.user.id)}}>Off Site</button>
                   </div>
                 )
               }):<div>Loading</div>

@@ -4,12 +4,15 @@ import { HashRouter } from 'react-router-dom'
 import Routing from './Route.jsx'
 import { createStoreHook, Provider } from 'react-redux'
 import store from './Redux/store.jsx'
-createRoot(document.getElementById('root')).render(
+import Init from './Components/Init.jsx'
+createRoot(document.getElementById('root')).render(<>
+
+  <Provider store={store}>
   
   <HashRouter>
-  <Provider store={store}>
 
     <Routing/>
-  </Provider>
   </HashRouter>
+  </Provider>
+</>
 )
