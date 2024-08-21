@@ -4,9 +4,9 @@
     align-items: center; 
     padding: 10px 0; 
     border-bottom: 1px solid #ddd;
-    width: auto; /* Adjusts the width based on content */
-    max-width: 800px; /* Optional: Limits the maximum width of the row */
-    margin: 0 auto; /* Centers the row horizontally */
+    width: auto;
+    max-width: 800px; 
+    margin: 0 auto; 
 }
 
 .details p {

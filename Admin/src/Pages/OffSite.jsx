@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { addOffSite } from '../Redux/actions/UserListAction';
 import { useLocation, useNavigate } from 'react-router-dom';
+import'../Style/OffSite.css'
 
 function OffSite() {
   const navi=useNavigate();

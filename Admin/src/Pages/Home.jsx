@@ -1,18 +1,18 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../Style/Home.css';
 
 function Home() {
-  
-    const navi=useNavigate();
-  return (
-    <div>Home
-    <button onClick={()=>{navi("/admin-sign-in")}}>AdminLogin</button>
-    <button onClick={()=>{navi("/hr-sign-in")}}>Hr Login</button>
-    
+    const navi = useNavigate();
 
-    </div>
-  )
+    return (
+        <div className="home-container">
+            <div className="button-container">
+                <button onClick={() => { navi("/admin-sign-in") }} className="admin-login-button">Admin Login</button>
+                <button onClick={() => { navi("/hr-sign-in") }} className="hr-login-button">HR Login</button>
+            </div>
+        </div>
+    );
 }
 
-export default Home
+export default Home;
