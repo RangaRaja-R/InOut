@@ -34,8 +34,7 @@ class LoginActivity : AppCompatActivity() {
             val email = emailInput.text.toString()
             val password = passwordInput.text.toString()
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                val backendUrl = "" // Replace with the backend URL from input
-                performLogin(email, password, backendUrl,
+                performLogin(email, password,
                     onSuccess = { token ->
                         // Save the JWT token and navigate to the dashboard
                         saveJwtToken(token)
@@ -66,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun performLogin(email: String, password: String, backendUrl: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
+    fun performLogin(email: String, password: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
         val client = OkHttpClient()
 
         val json = JSONObject().apply {
@@ -110,7 +109,7 @@ class LoginActivity : AppCompatActivity() {
         })
     }
     fun saveJwtToken(token: String) {
-        val sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putString("jwt_token", token)
             apply()

@@ -101,7 +101,14 @@ def check_in(request):
         attendance.save()
         return Response({'message': "check-in successful"}, status=status.HTTP_200_OK)
     else:
-        return Response({'message': "check-in failure"}, status=status.HTTP_400_BAD_REQUEST)
+        new_loc = Location()
+        new_loc.latitude = current_loc[0]
+        new_loc.longitude = current_loc[1]
+        new_loc.save()
+        employee.location = new_loc
+        employee.save()
+        return Response({'message': "location updated"}, status=status.HTTP_200_OK)
+        # return Response({'message': "check-in failure"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -111,8 +118,8 @@ def check_out(request):
     current_loc = (request.data['latitude'], request.data['longitude'])
     attendance = Attendance.objects.filter(user=employee, check_out__isnull=True).first()
 
-    if attendance and not is_within_radius((employee.location.latitude, employee.location.longitude),
-                                           current_loc):
+    if attendance:# and not is_within_radius((employee.location.latitude, employee.location.longitude),
+                   #                        current_loc):
 
         attendance.check_out = datetime.now(timezone.utc)
         work_hours = attendance.check_out - attendance.check_in
@@ -121,10 +128,9 @@ def check_out(request):
         return Response({'message': "check-out successful"}, status=status.HTTP_200_OK)
     else:
         if attendance:
-            print("loc")
+            return Response({'message': "please exit location"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            print("attend")
-        return Response({'message': "check-out successful"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': "no check in found"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])

@@ -40,7 +40,6 @@ class BackendUrlActivity : AppCompatActivity() {
     private fun checkLoginStatus() {
         val sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("jwt_token", null)
-        val backendUrl = sharedPreferences.getString("backend_url", "where?")
         if (token == null) {
             // No token, navigate to the Login screen
             val intent = Intent(this, LoginActivity::class.java)

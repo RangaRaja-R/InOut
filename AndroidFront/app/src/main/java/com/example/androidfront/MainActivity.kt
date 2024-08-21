@@ -18,6 +18,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.Request
 import okhttp3.Response
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
@@ -117,8 +118,16 @@ class DashboardActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!it.isSuccessful) {
+                        val errorMessage = it.body?.string()?.let { responseBody ->
+                            try {
+                                val json = JSONObject(responseBody)
+                                json.optString("message", "Check-in failed") // Fallback message if "message" is not present
+                            } catch (e: JSONException) {
+                                "Check-in failed: Unable to parse error message"
+                            }
+                        } ?: "Check-in failed: Empty response"
                         runOnUiThread {
-                            onFailure("Check-in failed: ${it.message}")
+                            onFailure("Check-in failed: ${errorMessage}")
                         }
                     } else {
                         runOnUiThread {
@@ -202,8 +211,16 @@ class DashboardActivity : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!it.isSuccessful) {
+                        val errorMessage = it.body?.string()?.let { responseBody ->
+                            try {
+                                val json = JSONObject(responseBody)
+                                json.optString("message", "Check-out failed") // Fallback message if "message" is not present
+                            } catch (e: JSONException) {
+                                "Check-out failed: Unable to parse error message"
+                            }
+                        } ?: "Check-out failed: Empty response"
                         runOnUiThread {
-                            onFailure("Check-out failed: ${it.message}")
+                            onFailure("Check-out failed: ${errorMessage}")
                         }
                     } else {
                         runOnUiThread {
@@ -227,12 +244,12 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     fun getJwtToken(): String?{
-        val sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
         return sharedPreferences.getString("jwt_token", null)
     }
 
     fun getBackendUrl(): String? {
-        val sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
         return sharedPreferences.getString("backend_url", "http://192.168.244.20:8000")
     }
 }
