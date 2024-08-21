@@ -1,6 +1,7 @@
 import jwt
+from django.db import transaction
 from rest_framework import status
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from datetime import datetime, timezone, timedelta
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import *
@@ -26,25 +27,30 @@ def other_register(request):
 
 @api_view(['POST'])
 def register(request):
-    serializer = UserSerializer(data=request.data['user'])
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    serializer.save()
     try:
-        location = Location().objects.create(
-            latitude=request.data['latitude'],
-            longitude=request.data['longitude']
-        )
-        location.save()
-        employee = Employee().objects.create(
-            user=User.objects.filter(email=request.data['user']['email']).first(),
-            location=location
-        )
-        employee.save()
+        with transaction.atomic():
+            # Validate and save the user
+            user_serializer = UserSerializer(data=request.data['user'])
+            user_serializer.is_valid(raise_exception=True)
+            user = user_serializer.save()
+
+            # Create and save the location
+            location_data = {
+                'latitude': request.data['latitude'],
+                'longitude': request.data['longitude']
+            }
+            location = Location.objects.create(**location_data)
+
+            # Associate the user with the employee profile
+            employee = Employee.objects.create(user=user, location=location)
+
+        return Response({'message': 'success'}, status=status.HTTP_201_CREATED)
+
+    except ValidationError as ve:
+        return Response(ve.detail, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
-        print(e)
+        print(f"Unexpected error: {e}")
         return Response({'message': 'failed'}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({'message': 'success'}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
