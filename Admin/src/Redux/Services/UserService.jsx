@@ -18,15 +18,7 @@ class UserListService{
     }
 
     
-    login(email,password){
-        return axios.post(API_URL+'/company/login',{
-            email,
-            password
-        })
-    }
-    logout(){
-        return axios.post(API_URL+'/company/logout');
-    }
+    
     addOffSite(data){
         return axios.post(API_URL+'/offsite',
             data

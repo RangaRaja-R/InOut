@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { addOffSite } from '../Redux/actions/UserListAction';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function OffSite() {
+  const navi=useNavigate();
   const {state}=useLocation();
   const dispatch=useDispatch();
   console.log(state.email);

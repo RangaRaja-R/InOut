@@ -31,7 +31,7 @@ function HrLogin() {
           <form onSubmit={handleSubmit}>
           <input className='InputField' type='email' onChange={(e)=>setData({...data,email:e.target.value})} placeholder='USERNAME' required/>
           <br /><br />
-          <input className='InputField' type='text' onChange={(e)=>setData({...data,password:e.target.value})} placeholder='PASSWORD' required/>
+          <input className='InputField' type='password' onChange={(e)=>setData({...data,password:e.target.value})} placeholder='PASSWORD' required/>
           <br /><br />
           <button type='submit' className='LoginButton'>Login</button>
           </form>
