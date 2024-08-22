@@ -3,19 +3,19 @@ from django.db import transaction
 from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from datetime import datetime, timezone, timedelta
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import AccessToken
 from .models import *
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .serializers import UserSerializer, EmployeeSerializer
 from .utils import *
-
 
 SECRET_KEY = "hello"
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def other_register(request):
     request.data['is_staff'] = True
     serializer = UserSerializer(data=request.data)
@@ -26,6 +26,7 @@ def other_register(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def register(request):
     try:
         with transaction.atomic():
@@ -65,8 +66,7 @@ def login(request):
     if not user.check_password(password):
         return Response({'message': 'Incorrect password'}, status=400)
 
-    refresh = RefreshToken.for_user(user)
-    access_token = str(refresh.access_token)
+    access_token = str(AccessToken.for_user(user))
 
     user.password = None
     serializer = UserSerializer(user)
@@ -83,11 +83,33 @@ def logout(request):
     return response
 
 
+# returns the list of employees with their last attendance
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-def all(request):
+@permission_classes([IsAdminUser])
+def employee_list(request):
     employees = Employee.objects.all()
     serializer = EmployeeSerializer(employees, many=True)
+    response = []
+    for employee in serializer.data:
+        last_attendance = Attendance.objects.filter(employee=employee['id']).order_by('-check_in').first()
+        if last_attendance:
+            response.append({
+                "id": employee['id'],
+                "name": employee['name'],
+                "email": employee['email'],
+                "check_in": last_attendance.check_in,
+                "check_out": last_attendance.check_out,
+                "working_hours": last_attendance.working_hours if last_attendance.check_out else "Has not checked out",
+            })
+        else:
+            response.append({
+                "id": employee['id'],
+                "name": employee['name'],
+                "email": employee['email'],
+                "check_in": None,
+                "check_out": None,
+                "working_hours": "-",
+            })
     return Response(serializer.data)
 
 
@@ -124,9 +146,9 @@ def check_out(request):
     current_loc = (request.data['latitude'], request.data['longitude'])
     attendance = Attendance.objects.filter(user=employee, check_out__isnull=True).first()
 
-    if attendance:# and not is_within_radius((employee.location.latitude, employee.location.longitude),
-                   #                        current_loc):
-
+    if attendance:
+    # if attendance and not is_within_radius((employee.location.latitude, employee.location.longitude),
+    #                                        current_loc):
         attendance.check_out = datetime.now(timezone.utc)
         work_hours = attendance.check_out - attendance.check_in
         attendance.work_hours = work_hours.total_seconds() / 3600.0
@@ -140,6 +162,7 @@ def check_out(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def offsite(request):
     if not request.data['email']:
         return Response({'message': "email is required"}, status=status.HTTP_400_BAD_REQUEST)
