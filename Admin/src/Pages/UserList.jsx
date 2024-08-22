@@ -33,7 +33,7 @@ function UserList() {
           {userlist.users?
               userlist.users.map((u,index)=>{
                 return (
-                  <div className='details' key={index}>
+                  <div className='details' key={index} onClick={()=>{navi("/attendance")}}>
                   <p>{u.user.name}</p>
                   <p>{u.user.email}</p>
                   <button onClick={()=>{HandleOffSite(u.user.id)}}>Off Site</button>
