@@ -91,26 +91,26 @@ def employee_list(request):
     serializer = EmployeeSerializer(employees, many=True)
     response = []
     for employee in serializer.data:
-        last_attendance = Attendance.objects.filter(employee=employee['id']).order_by('-check_in').first()
+        last_attendance = Attendance.objects.filter(user=employee['id']).order_by('-check_in').first()
         if last_attendance:
             response.append({
                 "id": employee['id'],
-                "name": employee['name'],
-                "email": employee['email'],
+                "name": employee['user']['name'],
+                "email": employee['user']['email'],
                 "check_in": last_attendance.check_in,
                 "check_out": last_attendance.check_out,
-                "working_hours": last_attendance.working_hours if last_attendance.check_out else "Has not checked out",
+                "working_hours": last_attendance.work_hours if last_attendance.check_out else "Has not checked out",
             })
         else:
             response.append({
                 "id": employee['id'],
-                "name": employee['name'],
-                "email": employee['email'],
+                "name": employee['user']['name'],
+                "email": employee['user']['email'],
                 "check_in": None,
                 "check_out": None,
                 "working_hours": "-",
             })
-    return Response(serializer.data)
+    return Response(response)
 
 
 @api_view(['POST'])
