@@ -1,4 +1,4 @@
-import UserService from "../Services/UserService";
+import UserService from "../Services/AuthService";
 const serv = UserService;
 
 export const postUser=(data)=>async (dispatch,getstate)=>{

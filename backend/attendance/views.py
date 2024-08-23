@@ -98,7 +98,7 @@ def employee_list(request):
                 "name": employee['user']['name'],
                 "email": employee['user']['email'],
                 "check_in": last_attendance.check_in,
-                "check_out": last_attendance.check_out,
+                "check_out": last_attendance.check_out if last_attendance.check_out else None,
                 "working_hours": last_attendance.work_hours if last_attendance.check_out else "Has not checked out",
             })
         else:

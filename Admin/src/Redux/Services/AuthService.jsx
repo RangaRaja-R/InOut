@@ -8,14 +8,32 @@ class AuthService{
         })
     }
     login(email,password){
-        return axios.post(API_URL+'/company/login',{
+        return this.axios.post(API_URL+'/company/login',{
             email,
             password
         })
     }
     logout(){
-        return axios.post(API_URL+'/company/logout');
+        return this.axios.post(API_URL+'/company/logout');
     }
+    postUser(data){
+        return this.axios.post(API_URL +'/register',
+            data,
+        )
+    }
+
+    getAllUsers(){
+        return this.axios.get(API_URL+'/all');
+    }
+
+    
+    
+    addOffSite(data){
+        return axios.post(API_URL+'/offsite',
+            data
+        );
+    }
+    
     
 }
 export default new AuthService();
