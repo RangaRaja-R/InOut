@@ -10,7 +10,7 @@
     <View
         android:id="@+id/top_strip"
         android:layout_width="match_parent"
-        android:layout_height="300px"
+        android:layout_height="150dp"
         android:background="#A38181"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,13 +38,15 @@
                 android:textSize="48sp"
                 android:textStyle="bold" />
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/profileImageView"
                 android:layout_width="111dp"
                 android:layout_height="87dp"
-                android:layout_marginLeft="80dp"
+                android:layout_marginStart="80dp"
                 android:layout_marginBottom="20dp"
+                android:background="#00FFFFFF"
                 android:contentDescription="Profile Image"
+                android:scaleType="centerInside"
                 android:src="@drawable/img_1" />
         </LinearLayout>
 

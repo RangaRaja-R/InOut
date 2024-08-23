@@ -3,18 +3,19 @@ package com.example.androidfront
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
+import java.util.Locale
 
 class LoginActivity : AppCompatActivity() {
 
@@ -65,17 +66,16 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun performLogin(email: String, password: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
+    private fun performLogin(email: String, password: String, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
         val client = OkHttpClient()
 
-        val json = JSONObject().apply {
+        val requestData = JSONObject().apply {
             put("email", email)
             put("password", password)
-        }.toString()
+        }
 
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
-        val requestBody = RequestBody.create(mediaType, json.toString())
-        // val requestBody = RequestBody.create(MediaType.get("application/json; charset=utf-8"), json)
+        val requestBody = requestData.toString().toRequestBody(mediaType)
         val sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val backendUrl = sharedPreferences.getString("backend_url", "")
         val request = Request.Builder()
@@ -112,6 +112,10 @@ class LoginActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putString("jwt_token", token)
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_YEAR, 7)
+            val expiryDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(calendar.time)
+            putString("expiry", expiryDate)
             apply()
         }
     }

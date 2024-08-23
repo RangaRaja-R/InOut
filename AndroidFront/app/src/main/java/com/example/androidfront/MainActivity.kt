@@ -1,12 +1,16 @@
 package com.example.androidfront
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -17,16 +21,20 @@ import okhttp3.OkHttpClient
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.util.Date
+import java.util.Locale
 
 
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var checkInButton: Button
     private lateinit var checkOutButton: Button
+    private lateinit var changeApiUrl: ImageButton
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 
@@ -34,225 +42,286 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        val sharedPreferences: SharedPreferences = getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE)
+        val expiryDate = sharedPreferences.getString("expiry", null)
+
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        val currentDate = sdf.format(Date())
+
+        if(expiryDate==null || currentDate > expiryDate.toString()){
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
         checkInButton = findViewById(R.id.btn_check_in)
         checkOutButton = findViewById(R.id.btn_check_out)
-
+        changeApiUrl = findViewById(R.id.profileImageView)
         checkInButton.setOnClickListener {
             performCheckIn()
         }
 
         checkOutButton.setOnClickListener {
-            // Perform check-out operation
             performCheckOut()
         }
+
+        changeApiUrl.setOnLongClickListener {
+            val intent = Intent(this, BackendUrlActivity::class.java)
+            startActivity(intent)
+            true
+        }
     }
 
-    fun performCheckIn() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
-            return
-        }
-
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                val latitude = location.latitude
-                val longitude = location.longitude
-                sendCheckInRequest(latitude, longitude,
-                    onSuccess = { message ->
-                        runOnUiThread {
-                            showAlert("Check In", message)
-                        }
-                    },
-                    onFailure = { message ->
-                        runOnUiThread {
-                            showAlert("Check In - error", message)
-                        }
-                    }
+        private fun performCheckIn() {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    1
                 )
-            } else {
-                runOnUiThread {
-                    Toast.makeText(this, "Unable to get location", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    fun sendCheckInRequest(latitude: Double, longitude: Double, onSuccess: (String) -> Unit, onFailure: (String) -> Unit) {
-        val jwtToken = getJwtToken()
-        if (jwtToken == null) {
-            runOnUiThread {
-                onFailure("JWT token is missing. Please log in again.")
-            }
-            return
-        }
-
-        val client = OkHttpClient()
-
-        val json = JSONObject().apply {
-            put("latitude", latitude)
-            put("longitude", longitude)
-        }.toString()
-
-        val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
-        val requestBody = RequestBody.create(mediaType, json)
-        val backendUrl = getBackendUrl()
-        if (backendUrl != null) {
-            Log.d("calling...", backendUrl)
-        } else {
-            Log.e("not found", "api")
-        }
-        val request = Request.Builder()
-            .url("$backendUrl/check-in") // Adjust the endpoint as per your backend
-            .post(requestBody)
-            .addHeader("Cookie", "jwt=$jwtToken")
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    onFailure("Network Error: ${e.message}")
-                }
+                return
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if (!it.isSuccessful) {
-                        val errorMessage = it.body?.string()?.let { responseBody ->
-                            try {
-                                val json = JSONObject(responseBody)
-                                json.optString("message", "Check-in failed") // Fallback message if "message" is not present
-                            } catch (e: JSONException) {
-                                "Check-in failed: Unable to parse error message"
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    sendCheckInRequest(latitude, longitude,
+                        onSuccess = { message ->
+                            runOnUiThread {
+                                showAlert("Check In", message)
                             }
-                        } ?: "Check-in failed: Empty response"
-                        runOnUiThread {
-                            onFailure("Check-in failed: ${errorMessage}")
+                        },
+                        onFailure = { message ->
+                            runOnUiThread {
+                                showAlert("Check In - error", message)
+                            }
                         }
-                    } else {
-                        runOnUiThread {
-                            onSuccess("Check-in successful")
-                        }
+                    )
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this, "Unable to get location", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
-        })
-    }
+        }
+
+        private fun sendCheckInRequest(
+            latitude: Double,
+            longitude: Double,
+            onSuccess: (String) -> Unit,
+            onFailure: (String) -> Unit
+        ) {
+            val jwtToken = getJwtToken()
+            if (jwtToken == null) {
+                runOnUiThread {
+                    onFailure("JWT token is missing. Please log in again.")
+                }
+                return
+            }
+
+            val client = OkHttpClient()
+
+            val requestData = JSONObject().apply {
+                put("latitude", latitude)
+                put("longitude", longitude)
+            }
+
+            val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+            val requestBody = requestData.toString().toRequestBody(mediaType)
+            val backendUrl = getBackendUrl()
+            if (backendUrl != null) {
+                Log.d("calling...", backendUrl)
+            } else {
+                Log.e("not found", "api")
+            }
+            val request = Request.Builder()
+                .url("$backendUrl/check-in") // Adjust the endpoint as per your backend
+                .post(requestBody)
+                .addHeader("Cookie", "jwt=$jwtToken")
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    runOnUiThread {
+                        onFailure("Network Error: ${e.message}")
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    response.use {
+                        if (!it.isSuccessful) {
+                            val errorMessage = it.body?.string()?.let { responseBody ->
+                                try {
+                                    val json = JSONObject(responseBody)
+                                    json.optString(
+                                        "message",
+                                        "Check-in failed"
+                                    ) // Fallback message if "message" is not present
+                                } catch (e: JSONException) {
+                                    "Check-in failed: Unable to parse error message"
+                                }
+                            } ?: "Check-in failed: Empty response"
+                            runOnUiThread {
+                                onFailure("Check-in failed: ${errorMessage}")
+                            }
+                        } else {
+                            runOnUiThread {
+                                onSuccess("Check-in successful")
+                            }
+                        }
+                    }
+                }
+            })
+        }
 
 
     private fun performCheckOut() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
-            return
-        }
-
-        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                val latitude = location.latitude
-                val longitude = location.longitude
-                sendCheckOutRequest(latitude, longitude,
-                    onSuccess = { message ->
-                        runOnUiThread {
-                            showAlert("Check Out", message)
-                        }
-                    },
-                    onFailure = { message ->
-                        runOnUiThread {
-                            showAlert("Check Out - error", message)
-                        }
-                    }
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    1
                 )
-            } else {
-                runOnUiThread {
-                    Toast.makeText(this, "Unable to get location", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun sendCheckOutRequest(latitude: Double, longitude: Double, onSuccess: (String)->Unit, onFailure: (String)->Unit) {
-        val jwtToken = getJwtToken()
-        if (jwtToken == null) {
-            runOnUiThread {
-                onFailure("JWT token is missing. Please log in again.")
-            }
-            return
-        }
-
-        val client = OkHttpClient()
-
-        val json = JSONObject().apply {
-            put("latitude", latitude)
-            put("longitude", longitude)
-        }.toString()
-
-        val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
-        val requestBody = RequestBody.create(mediaType, json)
-        val backendUrl = getBackendUrl()
-        if (backendUrl != null) {
-            Log.d("calling...", backendUrl)
-        } else {
-            Log.e("not found", "api")
-        }
-        val request = Request.Builder()
-            .url("$backendUrl/check-out") // Adjust the endpoint as per your backend
-            .post(requestBody)
-            .addHeader("Cookie", "jwt=$jwtToken")
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    onFailure("Network Error: ${e.message}")
-                }
+                return
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if (!it.isSuccessful) {
-                        val errorMessage = it.body?.string()?.let { responseBody ->
-                            try {
-                                val json = JSONObject(responseBody)
-                                json.optString("message", "Check-out failed") // Fallback message if "message" is not present
-                            } catch (e: JSONException) {
-                                "Check-out failed: Unable to parse error message"
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    sendCheckOutRequest(latitude, longitude,
+                        onSuccess = { message ->
+                            runOnUiThread {
+                                showAlert("Check Out", message)
                             }
-                        } ?: "Check-out failed: Empty response"
-                        runOnUiThread {
-                            onFailure("Check-out failed: ${errorMessage}")
+                        },
+                        onFailure = { message ->
+                            runOnUiThread {
+                                showAlert("Check Out - error", message)
+                            }
                         }
-                    } else {
-                        runOnUiThread {
-                            onSuccess("Check-out successful")
-                        }
+                    )
+                } else {
+                    runOnUiThread {
+                        Toast.makeText(this, "Unable to get location", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
-        })
-    }
+        }
+
+    private fun sendCheckOutRequest(
+            latitude: Double,
+            longitude: Double,
+            onSuccess: (String) -> Unit,
+            onFailure: (String) -> Unit
+        ) {
+            val jwtToken = getJwtToken()
+            if (jwtToken == null) {
+                runOnUiThread {
+                    onFailure("JWT token is missing. Please log in again.")
+                }
+                return
+            }
+
+            val client = OkHttpClient()
+
+            val requestData = JSONObject().apply {
+                put("latitude", latitude)
+                put("longitude", longitude)
+            }
+
+            val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+            val requestBody = requestData.toString().toRequestBody(mediaType)
+            val backendUrl = getBackendUrl()
+            if (backendUrl != null) {
+                Log.d("calling...", backendUrl)
+            } else {
+                Log.e("not found", "api")
+            }
+            val request = Request.Builder()
+                .url("$backendUrl/check-out") // Adjust the endpoint as per your backend
+                .post(requestBody)
+                .addHeader("Cookie", "jwt=$jwtToken")
+                .build()
+
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    runOnUiThread {
+                        onFailure("Network Error: ${e.message}")
+                    }
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    response.use {
+                        if (!it.isSuccessful) {
+                            val errorMessage = it.body?.string()?.let { responseBody ->
+                                try {
+                                    val json = JSONObject(responseBody)
+                                    json.optString(
+                                        "message",
+                                        "Check-out failed"
+                                    ) // Fallback message if "message" is not present
+                                } catch (e: JSONException) {
+                                    "Check-out failed: Unable to parse error message"
+                                }
+                            } ?: "Check-out failed: Empty response"
+                            runOnUiThread {
+                                onFailure("Check-out failed: $errorMessage")
+                            }
+                        } else {
+                            runOnUiThread {
+                                onSuccess("Check-out successful")
+                            }
+                        }
+                    }
+                }
+            })
+        }
 
 
     private fun showAlert(title: String, message: String) {
-        android.app.AlertDialog.Builder(this).apply {
-            setTitle(title)
-            setMessage(message)
-            setPositiveButton("OK", null)
-            create()
-            show()
+            android.app.AlertDialog.Builder(this).apply {
+                setTitle(title)
+                setMessage(message)
+                setPositiveButton("OK", null)
+                create()
+                show()
+            }
+        }
+
+        fun getJwtToken(): String? {
+            val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+            return sharedPreferences.getString("jwt_token", null)
+        }
+
+        fun getBackendUrl(): String? {
+            val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+            return sharedPreferences.getString("backend_url", "")
         }
     }
 
-    fun getJwtToken(): String?{
-        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        return sharedPreferences.getString("jwt_token", null)
-    }
-
-    fun getBackendUrl(): String? {
-        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
-        return sharedPreferences.getString("backend_url", "http://192.168.244.20:8000")
-    }
-}
 
 
 //class MainActivity : AppCompatActivity() {
