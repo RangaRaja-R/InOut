@@ -1,39 +1,39 @@
-import {API_URL} from '../store';
+import { API_URL } from '../store';
 import axios from 'axios';
-class AuthService{
-    constructor(){
+class AuthService {
+    constructor() {
         this.apiUrl = API_URL;
         this.axios = axios.create({
-            withCredentials:true
+            withCredentials: true
         })
     }
-    login(email,password){
-        return this.axios.post(API_URL+'/company/login',{
+    login(email, password) {
+        return this.axios.post(API_URL + '/company/login', {
             email,
             password
         })
     }
-    logout(){
-        return this.axios.post(API_URL+'/company/logout');
+    logout() {
+        return this.axios.post(API_URL + '/company/logout');
     }
-    postUser(data){
-        return this.axios.post(API_URL +'/register',
+    postUser(data) {
+        return this.axios.post(API_URL + '/register',
             data,
         )
     }
 
-    getAllUsers(){
-        return this.axios.get(API_URL+'/all');
+    getAllUsers() {
+        return this.axios.get(API_URL + '/all');
     }
 
-    
-    
-    addOffSite(data){
-        return axios.post(API_URL+'/offsite',
+
+
+    addOffSite(data) {
+        return this.axios.post(API_URL + '/offsite',
             data
         );
     }
-    
-    
+
+
 }
 export default new AuthService();

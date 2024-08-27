@@ -25,7 +25,7 @@ function UserList() {
   };
 
   const stampConverter = (check) => {
-    if(check===null){
+    if (check === null) {
       return "-"
     }
     const formattedDateTime = new Date(check).toLocaleString(
@@ -45,7 +45,7 @@ function UserList() {
   return (
     <div className="user-list-container">
       <h2>Employee List</h2>
-      <button className="add-user-button" onClick={()=>{dispatch(getAllUsers())}}>Refresh</button>
+      <button className="add-user-button" onClick={() => { dispatch(getAllUsers()) }}>Refresh</button>
       <button className="add-user-button" onClick={handleAddUser}>Add User</button>
       <table className="user-list-table">
         <thead>

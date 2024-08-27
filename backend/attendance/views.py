@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 from .models import *
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .serializers import UserSerializer, EmployeeSerializer
 from .utils import *
 
@@ -35,15 +35,24 @@ def register(request):
             user_serializer.is_valid(raise_exception=True)
             user = user_serializer.save()
 
-            # Create and save the location
-            location_data = {
-                'latitude': request.data['latitude'],
-                'longitude': request.data['longitude']
-            }
-            location = Location.objects.create(**location_data)
+            if request.data['loc_id']:
+                location = Location.objects.filter(id=request.data['loc_id']).first()
+                employee = Employee.objects.create(user=user, location=location)
+                employee.save()
+            else:
+                # Create and save the location
+                location_data = {
+                    'latitude': request.data['latitude'],
+                    'longitude': request.data['longitude'],
+                    'name': request.data['office_name']
+                }
+                location = Location.objects.create(**location_data)
+                location.save()
+                # Associate the user with the employee profile
+                employee = Employee.objects.create(user=user, location=location)
+                employee.save()
 
-            # Associate the user with the employee profile
-            employee = Employee.objects.create(user=user, location=location)
+                print("done creating employee")
 
         return Response({'message': 'success'}, status=status.HTTP_201_CREATED)
 
@@ -117,8 +126,10 @@ def employee_list(request):
 @permission_classes([IsAuthenticated])
 def check_in(request):
     employee = Employee.objects.filter(user=request.user).first()
-    current_loc = (request.data['latitude'], request.data['longitude'])
+    current_loc = (round(request.data['latitude'], 9), round(request.data['longitude'], 9))
 
+    print(current_loc)
+    print(employee.location.latitude, employee.location.longitude)
     if ((employee.offsite and employee.offsite.date == datetime.now(timezone.utc).date()
          and is_within_radius((employee.offsite.latitude, employee.offsite.longitude), current_loc)) or
             is_within_radius((employee.location.latitude, employee.location.longitude), current_loc)):
@@ -129,14 +140,12 @@ def check_in(request):
         attendance.save()
         return Response({'message': "check-in successful"}, status=status.HTTP_200_OK)
     else:
-        new_loc = Location()
-        new_loc.latitude = current_loc[0]
-        new_loc.longitude = current_loc[1]
-        new_loc.save()
-        employee.location = new_loc
-        employee.save()
-        return Response({'message': "location updated"}, status=status.HTTP_200_OK)
-        # return Response({'message': "check-in failure"}, status=status.HTTP_400_BAD_REQUEST)
+        # new_loc = Location.objects.filter(id=employee.location.id).first()
+        # new_loc.latitude = current_loc[0]
+        # new_loc.longitude = current_loc[1]
+        # new_loc.save()
+        # return Response({'message': "location updated"}, status=status.HTTP_200_OK)
+        return Response({'message': "check-in failure"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -166,14 +175,50 @@ def check_out(request):
 def offsite(request):
     if not request.data['email']:
         return Response({'message': "email is required"}, status=status.HTTP_400_BAD_REQUEST)
-    employee = Employee.objects.filter(user_id=request.data['email']).first()
+    employee = Employee.objects.filter(user__email=request.data['email']).first()
     if employee is None:
         return Response({'message': 'User not found'}, status=400)
-    offsite = Offsite()
-    offsite.latitude = request.data['latitude']
-    offsite.longitude = request.data['longitude']
-    offsite.date = request.data['date']
-    offsite.save()
-    employee.offsite = offsite
-    employee.save()
+    if request.data['loc_id']:
+        loc = Location.objects.filter(id=request.data['loc_id']).first()
+        offsite = Offsite.objects.create(
+            name=loc.name,
+            latitude=loc.latitude,
+            longitude=loc.longitude,
+            date=request.data['date'],
+        )
+        offsite.save()
+        employee.offsite = offsite
+        employee.save()
+    else:
+        offsite = Offsite.objects.create(
+            name=request.data['name'],
+            latitude=request.data['latitude'],
+            longitude=request.data['longitude'],
+            date=request.data['date']
+        )
+        offsite.save()
+        employee.offsite = offsite
+        employee.save()
     return Response({'message': 'success'}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def locations(request):
+    response = []
+    location_list = Location.objects.all()
+    for location in location_list:
+        response.append({
+            "id": location.id,
+            "name": location.name,
+            "latitude": location.latitude,
+            "longitude": location.longitude,
+        })
+    return Response(response)
+
+@api_view(['GET'])
+def delete(request):
+    # deletes everything
+    Location.objects.all().delete()
+    Offsite.objects.all().delete()
+    Attendance.objects.all().delete()
+
+    return Response({'message': "delete"}, status=status.HTTP_200_OK)

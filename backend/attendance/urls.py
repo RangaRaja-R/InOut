@@ -12,7 +12,9 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('logout', views.logout, name='logout'),
     path('all', views.employee_list, name='all'),  # only admins
+    path('locations', views.locations),# only admins
     path('check-in', views.check_in, name='check_in'),
     path('check-out', views.check_out, name='check_out'),
     path('offsite', views.offsite, name='offsite'),  # only admins
+    path('delete', views.delete, name='delete'),
 ]

@@ -26,6 +26,6 @@ class JWTAuthenticationFromCookie(BaseAuthentication):
     def is_excluded_endpoint(self, request):
         # List of endpoints that do not require authentication
         print(request.path)
-        excluded_endpoints = ['/logout', '/login', '/current/login']
+        excluded_endpoints = ['/logout', '/login', '/company/login']
         return request.path in excluded_endpoints
 
