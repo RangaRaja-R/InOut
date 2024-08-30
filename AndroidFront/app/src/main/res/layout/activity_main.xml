@@ -10,8 +10,8 @@
     <View
         android:id="@+id/top_strip"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="#A38181"
+        android:layout_height="137dp"
+        android:background="#945757"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
@@ -22,17 +22,17 @@
         tools:context=".MainActivity">
 
         <!-- Top Section with Name and Profile Image -->
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="110dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="6dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="80dp"
                 android:text="IN-OUT"
                 android:textColor="#FFFFFF"
                 android:textSize="48sp"
@@ -42,18 +42,16 @@
                 android:id="@+id/profileImageView"
                 android:layout_width="111dp"
                 android:layout_height="87dp"
-                android:layout_marginStart="80dp"
-                android:layout_marginBottom="20dp"
                 android:background="#00FFFFFF"
                 android:contentDescription="Profile Image"
                 android:scaleType="centerInside"
                 android:src="@drawable/img_1" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="488dp"
-            android:layout_marginTop="32dp"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="horizontal">
 

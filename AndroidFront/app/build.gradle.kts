@@ -1,11 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+
 }
 
 android {
     namespace = "com.example.androidfront"
     compileSdk = 34
+
+
 
     defaultConfig {
         applicationId = "com.example.androidfront"

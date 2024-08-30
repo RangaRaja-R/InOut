@@ -27,8 +27,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        emailInput = findViewById(R.id.usernameEditText)
-        passwordInput = findViewById(R.id.passwordEditText)
+        emailInput = findViewById(R.id.emailInput)
+        passwordInput = findViewById(R.id.passwordInput)
         loginButton = findViewById(R.id.loginButton)
 
         loginButton.setOnClickListener {

@@ -17,6 +17,8 @@ composeBom = "2024.04.01"
 okhttp = "4.11.0"
 playServicesLocation = "21.3.0"
 volley = "1.2.1"
+relay = "0.3.12"
+
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -46,4 +48,5 @@ volley = { module = "com.android.volley:volley", version.ref = "volley" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-relay = { id = "com.google.relay", version.ref = "relay" }
 
