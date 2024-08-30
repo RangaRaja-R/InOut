@@ -75,7 +75,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="Login Icon"
                 android:scaleType="fitCenter"
-                android:src="@drawable/img_1" />
+                android:src="@drawable/logo" />
 
             <!-- Email Input -->
             <EditText
