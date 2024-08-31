@@ -32,7 +32,12 @@ class AuthService {
         return this.axios.post(API_URL + '/offsite',
             data
         );
+
     }
+    validate(email){
+        return this.axios.post(API_URL + '/validate', email);
+    }
+
 
 
 }

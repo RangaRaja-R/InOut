@@ -1,6 +1,7 @@
 const initialState={
     user:null,
-    userType:null
+    userType:null,
+    validate_msg: null
 }
 
 const AuthReducer=(state=initialState,action)=>{
@@ -20,6 +21,11 @@ const AuthReducer=(state=initialState,action)=>{
                 user:null,
                 userType:null
             }
+        case "VALIDATE_MSG":
+            return{
+                ...state,
+                validate_msg:action.payload
+                }
         default:
             return state;
     }

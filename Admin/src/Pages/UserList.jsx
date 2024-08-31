@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers } from '../Redux/actions/UserListAction';
 import '../Style/UserList.css';
 import { useNavigate } from 'react-router-dom';
+import { validate } from '../Redux/actions/AuthAction';
 
 function UserList() {
   const navigate = useNavigate();
@@ -19,7 +20,9 @@ function UserList() {
   const handleOffSite = (email) => {
     navigate("/offsite", { state: { email } });
   };
-
+  const handleValidate=(email) =>{
+    dispatch(validate(email));
+  }
   const handleAddUser = () => {
     navigate("/add-user");
   };
@@ -67,6 +70,7 @@ function UserList() {
                 <td>{stampConverter(u.check_out)}</td>
                 <td>
                   <button className="offsite-button" onClick={() => handleOffSite(u.email)}>Off Site</button>
+                  <button className="Validate" onClick={() => handleValidate(u.email)}>Validate</button>
                 </td>
               </tr>
             ))

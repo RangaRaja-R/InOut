@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
         val url = sharedPreferences.getString("backend_url", null)
 
         if(url.isNullOrEmpty()){
-            val intent = Intent(this, DashboardActivity::class.java)
+            val intent = Intent(this, BackendUrlActivity::class.java)
             startActivity(intent)
         }
 

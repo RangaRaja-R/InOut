@@ -174,7 +174,7 @@ def check_out(request):
             return Response({'message': "no check in found"}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAdminUser])
 def validate(request):
     if not request.data['email']:

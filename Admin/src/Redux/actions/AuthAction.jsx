@@ -22,3 +22,12 @@ export const logout=()=>async(dispatch,getState)=>{
         console.log(er);
     }
 }
+
+export const validate=(email)=>async(dispatch, getState)=>{
+    try{
+        const res=await serv.validate(email);
+        dispatch({type:"VALIDATE",payload:res.data.message});
+    }catch(e){
+        console.log(e);
+    }
+}

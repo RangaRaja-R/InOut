@@ -42,16 +42,19 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        val sharedPreferences: SharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        val expiryDate = sharedPreferences.getString("expiry", null)
         if(getBackendUrl().isNullOrEmpty()){
-            Log.e("URL", "URL not found")
             val intent = Intent(this, BackendUrlActivity::class.java)
             startActivity(intent)
+        }else{
+            Log.e("Url", getBackendUrl().toString())
         }
+        val sharedPreferences: SharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val expiryDate = sharedPreferences.getString("expiry", null)
 
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val currentDate = sdf.format(Date())
+
+
 
         if(expiryDate==null || currentDate > expiryDate.toString()){
             val intent = Intent(this, LoginActivity::class.java)
@@ -76,32 +79,12 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        const val PERMISSION_REQUEST_CODE = 1
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, try to perform check-in again
-                performCheckIn()
-            } else {
-                Toast.makeText(this, "Location permission is required to check in.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
         private fun performCheckIn() {
             if (ActivityCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(
+                && ActivityCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
@@ -112,7 +95,7 @@ class DashboardActivity : AppCompatActivity() {
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ),
-                    PERMISSION_REQUEST_CODE
+                    1
                 )
                 return
             }
@@ -343,7 +326,7 @@ class DashboardActivity : AppCompatActivity() {
 
         fun getBackendUrl(): String? {
             val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
-            return sharedPreferences.getString("backend_url", null)
+            return sharedPreferences.getString("backend_url", "")
         }
     }
 
