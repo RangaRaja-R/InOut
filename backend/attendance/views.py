@@ -1,15 +1,17 @@
-import jwt
+from datetime import datetime, timezone
+import json
+import hashlib
 from django.db import transaction
 from rest_framework import status
-from rest_framework.exceptions import AuthenticationFailed, ValidationError
-from datetime import datetime, timezone, timedelta
-from rest_framework_simplejwt.tokens import AccessToken
-from .models import *
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework_simplejwt.tokens import AccessToken
+
+from .models import Employee, User, Attendance, Block, Offsite, Location
 from .serializers import UserSerializer, EmployeeSerializer
-from .utils import *
+from .utils import is_within_radius
 
 SECRET_KEY = "hello"
 
@@ -138,6 +140,7 @@ def check_in(request):
             check_in=datetime.now(timezone.utc)
         )
         attendance.save()
+        create_block(attendance, "check-in")
         return Response({'message': "check-in successful"}, status=status.HTTP_200_OK)
     else:
         # new_loc = Location.objects.filter(id=employee.location.id).first()
@@ -162,12 +165,52 @@ def check_out(request):
         work_hours = attendance.check_out - attendance.check_in
         attendance.work_hours = work_hours.total_seconds() / 3600.0
         attendance.save()
+        create_block(attendance, "check-out")
         return Response({'message': "check-out successful"}, status=status.HTTP_200_OK)
     else:
         if attendance:
             return Response({'message': "please exit location"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response({'message': "no check in found"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def validate(request):
+    if not request.data['email']:
+        return Response({'message': 'no email found'}, status=status.HTTP_400_BAD_REQUEST)
+    print(f'employee_email: {request.data["email"]}')
+    blocks = Block.objects.filter(data__contains=f'\"employee_email\": \"{request.data["email"]}\"').order_by('index')
+
+    if not blocks:
+        return Response({'message': 'No attendance record found for the employee'}, status=status.HTTP_400_BAD_REQUEST)
+
+    prev = None
+    for block in blocks:
+        block_data = json.loads(block.data)
+        block_content = json.dumps({
+            "index": block.index,
+            "timestamp": str(block.timestamp),
+            "data": block.data,
+            "previous_hash": block.previous_hash,
+        }, sort_keys=True)
+        calculated_hash = hashlib.sha256(block_content.encode()).hexdigest()
+
+        if calculated_hash != block.hash:
+            return Response({'message':'Invalid Block detected, Data may have been tampered'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if prev and block.previous_hash != prev.hash:
+            return Response({'message': 'Invalid blockchain sequence detected, Data may have been tampered'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if block_data['action'] == "check-out" and 'check-out' in block_data:
+            block_check_in = block_data['check_in']
+            block_check_out = block_data['check_out']
+
+            if block_check_in < block_check_out:
+                return Response({'message': 'Invalid record detected'}, status=status.HTTP_400_BAD_REQUEST)
+        prev = block
+
+    return Response({'message': 'Validation successful'}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -180,24 +223,24 @@ def offsite(request):
         return Response({'message': 'User not found'}, status=400)
     if request.data['loc_id']:
         loc = Location.objects.filter(id=request.data['loc_id']).first()
-        offsite = Offsite.objects.create(
+        new_offsite = Offsite.objects.create(
             name=loc.name,
             latitude=loc.latitude,
             longitude=loc.longitude,
             date=request.data['date'],
         )
-        offsite.save()
-        employee.offsite = offsite
+        new_offsite.save()
+        employee.offsite = new_offsite
         employee.save()
     else:
-        offsite = Offsite.objects.create(
+        new_offsite = Offsite.objects.create(
             name=request.data['name'],
             latitude=request.data['latitude'],
             longitude=request.data['longitude'],
             date=request.data['date']
         )
-        offsite.save()
-        employee.offsite = offsite
+        new_offsite.save()
+        employee.offsite = new_offsite
         employee.save()
     return Response({'message': 'success'}, status=status.HTTP_200_OK)
 
@@ -222,3 +265,21 @@ def delete(request):
     Attendance.objects.all().delete()
 
     return Response({'message': "delete"}, status=status.HTTP_200_OK)
+
+
+def create_block(attendance_data, action):
+    last_block = Block.objects.last()
+    previous_hash = last_block.hash if last_block else '0'*64
+    data = json.dumps({
+        'employee_email': attendance_data.user.user.email,
+        'action': action,
+        'check_in_time': str(attendance_data.check_in),
+        'check_out_time': str(attendance_data.check_out),
+    })
+
+    new_block = Block.objects.create(
+        index=(last_block.index+1 if last_block else 0),
+        data=data,
+        previous_hash=previous_hash,
+    )
+    new_block.save()

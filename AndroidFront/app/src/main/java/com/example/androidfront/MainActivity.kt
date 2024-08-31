@@ -32,18 +32,23 @@ import java.util.Locale
 
 class DashboardActivity : AppCompatActivity() {
 
-    private lateinit var checkInButton: Button
-    private lateinit var checkOutButton: Button
+    private lateinit var checkInButton: ImageButton
+    private lateinit var checkOutButton: ImageButton
     private lateinit var changeApiUrl: ImageButton
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_dashboard)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        val sharedPreferences: SharedPreferences = getSharedPreferences("AuthPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences: SharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val expiryDate = sharedPreferences.getString("expiry", null)
+        if(getBackendUrl().isNullOrEmpty()){
+            Log.e("URL", "URL not found")
+            val intent = Intent(this, BackendUrlActivity::class.java)
+            startActivity(intent)
+        }
 
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         val currentDate = sdf.format(Date())
@@ -53,9 +58,9 @@ class DashboardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        checkInButton = findViewById(R.id.btn_check_in)
-        checkOutButton = findViewById(R.id.btn_check_out)
-        changeApiUrl = findViewById(R.id.profileImageView)
+        checkInButton = findViewById(R.id.iconCheckIn)
+        checkOutButton = findViewById(R.id.iconCheckOut)
+        changeApiUrl = findViewById(R.id.appLogo)
         checkInButton.setOnClickListener {
             performCheckIn()
         }
@@ -71,12 +76,32 @@ class DashboardActivity : AppCompatActivity() {
         }
     }
 
+    companion object {
+        const val PERMISSION_REQUEST_CODE = 1
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, try to perform check-in again
+                performCheckIn()
+            } else {
+                Toast.makeText(this, "Location permission is required to check in.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
         private fun performCheckIn() {
             if (ActivityCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(
+                || ActivityCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
@@ -87,7 +112,7 @@ class DashboardActivity : AppCompatActivity() {
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION
                     ),
-                    1
+                    PERMISSION_REQUEST_CODE
                 )
                 return
             }
@@ -318,7 +343,7 @@ class DashboardActivity : AppCompatActivity() {
 
         fun getBackendUrl(): String? {
             val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
-            return sharedPreferences.getString("backend_url", "")
+            return sharedPreferences.getString("backend_url", null)
         }
     }
 

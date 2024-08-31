@@ -17,4 +17,5 @@ urlpatterns = [
     path('check-out', views.check_out, name='check_out'),
     path('offsite', views.offsite, name='offsite'),  # only admins
     path('delete', views.delete, name='delete'),
+    path('validate', views.validate, name='validate'),
 ]
