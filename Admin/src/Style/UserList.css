@@ -35,7 +35,8 @@
     border-collapse: collapse;
 }
 
-.user-list-table th, .user-list-table td {
+.user-list-table th,
+.user-list-table td {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
@@ -57,6 +58,7 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    margin-right: 10px;
 }
 
 .offsite-button:hover {

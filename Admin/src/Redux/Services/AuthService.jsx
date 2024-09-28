@@ -34,8 +34,8 @@ class AuthService {
         );
 
     }
-    validate(email){
-        return this.axios.post(API_URL + '/validate', email);
+    validate(email) {
+        return this.axios.post(API_URL + '/validate', { "email": email });
     }
 
 

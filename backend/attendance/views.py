@@ -140,14 +140,13 @@ def check_in(request):
             check_in=datetime.now(timezone.utc)
         )
         attendance.save()
-        create_block(attendance, "check-in")
         return Response({'message': "check-in successful"}, status=status.HTTP_200_OK)
     else:
-        # new_loc = Location.objects.filter(id=employee.location.id).first()
-        # new_loc.latitude = current_loc[0]
-        # new_loc.longitude = current_loc[1]
-        # new_loc.save()
-        # return Response({'message': "location updated"}, status=status.HTTP_200_OK)
+        new_loc = Location.objects.filter(id=employee.location.id).first()
+        new_loc.latitude = current_loc[0]
+        new_loc.longitude = current_loc[1]
+        new_loc.save()
+        return Response({'message': "location updated"}, status=status.HTTP_200_OK)
         return Response({'message': "check-in failure"}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -165,7 +164,6 @@ def check_out(request):
         work_hours = attendance.check_out - attendance.check_in
         attendance.work_hours = work_hours.total_seconds() / 3600.0
         attendance.save()
-        create_block(attendance, "check-out")
         return Response({'message': "check-out successful"}, status=status.HTTP_200_OK)
     else:
         if attendance:
@@ -173,44 +171,6 @@ def check_out(request):
         else:
             return Response({'message': "no check in found"}, status=status.HTTP_400_BAD_REQUEST)
 
-
-@api_view(['POST'])
-@permission_classes([IsAdminUser])
-def validate(request):
-    if not request.data['email']:
-        return Response({'message': 'no email found'}, status=status.HTTP_400_BAD_REQUEST)
-    print(f'employee_email: {request.data["email"]}')
-    blocks = Block.objects.filter(data__contains=f'\"employee_email\": \"{request.data["email"]}\"').order_by('index')
-
-    if not blocks:
-        return Response({'message': 'No attendance record found for the employee'}, status=status.HTTP_400_BAD_REQUEST)
-
-    prev = None
-    for block in blocks:
-        block_data = json.loads(block.data)
-        block_content = json.dumps({
-            "index": block.index,
-            "timestamp": str(block.timestamp),
-            "data": block.data,
-            "previous_hash": block.previous_hash,
-        }, sort_keys=True)
-        calculated_hash = hashlib.sha256(block_content.encode()).hexdigest()
-
-        if calculated_hash != block.hash:
-            return Response({'message':'Invalid Block detected, Data may have been tampered'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if prev and block.previous_hash != prev.hash:
-            return Response({'message': 'Invalid blockchain sequence detected, Data may have been tampered'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if block_data['action'] == "check-out" and 'check-out' in block_data:
-            block_check_in = block_data['check_in']
-            block_check_out = block_data['check_out']
-
-            if block_check_in < block_check_out:
-                return Response({'message': 'Invalid record detected'}, status=status.HTTP_400_BAD_REQUEST)
-        prev = block
-
-    return Response({'message': 'Validation successful'}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -266,20 +226,3 @@ def delete(request):
 
     return Response({'message': "delete"}, status=status.HTTP_200_OK)
 
-
-def create_block(attendance_data, action):
-    last_block = Block.objects.last()
-    previous_hash = last_block.hash if last_block else '0'*64
-    data = json.dumps({
-        'employee_email': attendance_data.user.user.email,
-        'action': action,
-        'check_in_time': str(attendance_data.check_in),
-        'check_out_time': str(attendance_data.check_out),
-    })
-
-    new_block = Block.objects.create(
-        index=(last_block.index+1 if last_block else 0),
-        data=data,
-        previous_hash=previous_hash,
-    )
-    new_block.save()

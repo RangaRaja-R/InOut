@@ -20,7 +20,7 @@ function UserList() {
   const handleOffSite = (email) => {
     navigate("/offsite", { state: { email } });
   };
-  const handleValidate=(email) =>{
+  const handleValidate = (email) => {
     dispatch(validate(email));
   }
   const handleAddUser = () => {
@@ -70,7 +70,7 @@ function UserList() {
                 <td>{stampConverter(u.check_out)}</td>
                 <td>
                   <button className="offsite-button" onClick={() => handleOffSite(u.email)}>Off Site</button>
-                  <button className="Validate" onClick={() => handleValidate(u.email)}>Validate</button>
+                  <button className="offsite-button" onClick={() => handleValidate(u.email)}>Validate</button>
                 </td>
               </tr>
             ))

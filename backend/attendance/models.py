@@ -76,26 +76,3 @@ class Attendance(models.Model):
     def __str__(self):
         return f"{self.user} - {self.check_in.date()}"
 
-
-class Block(models.Model):
-    index = models.IntegerField()
-    timestamp = models.DateTimeField(default=timezone.now)
-    data = models.TextField()
-    previous_hash = models.CharField(max_length=64)
-    hash = models.CharField(max_length=64)
-    
-    def save(self, *args, **kwargs):
-        self.hash = self.compute_hash()
-        super().save(*args, **kwargs)
-
-    def compute_hash(self):
-        block_string = json.dumps(self.to_dict(), sort_keys=True).encode()
-        return hashlib.sha256(block_string).hexdigest()
-
-    def to_dict(self):
-        return {
-            "index": self.index,
-            "timestamp": str(self.timestamp),
-            "data": self.data,
-            "previous_hash": self.previous_hash,
-        }
