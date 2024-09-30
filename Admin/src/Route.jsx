@@ -9,17 +9,18 @@ import NavBar from './Components/NavBar'
 import OffSite from './Pages/OffSite'
 import AddUser from './Pages/AddUser'
 import Attendance from './Pages/Attendance'
+import SideBar from './Pages/SideBar'
 
 function Routing() {
   return (
     <>
 
-    <NavBar/>
+    <SideBar/>
     
    <Routes>
     <Route path="/" element={<Home />} />
     <Route path="/admin-sign-in" element={<AdminLogin />} />
-    <Route path="/hr-sign-in" element={<HrLogin />} />
+    
     <Route path="/department-list" element={<DepartmentList/>}/>
     <Route path="/user-list" element={<UserList/>}/>
     <Route path='/offsite' element={<OffSite/> } />
