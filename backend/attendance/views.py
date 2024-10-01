@@ -1,6 +1,10 @@
 from datetime import datetime, timezone
 import json
 import hashlib
+from django.http import HttpResponse
+from io import BytesIO
+
+import qrcode
 from django.db import transaction
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -9,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
-from .models import Employee, User, Attendance, Block, Offsite, Location
+from .models import Employee, User, Attendance, Offsite, Location
 from .serializers import UserSerializer, EmployeeSerializer
 from .utils import is_within_radius
 
@@ -63,6 +67,46 @@ def register(request):
     except Exception as e:
         print(f"Unexpected error: {e}")
         return Response({'message': 'failed'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def get_code(request):
+    email = request.data['email']
+    user = User.objects.filter(email=email).first()
+
+    if user is None:
+        return Response({'message': 'not found'}, status=status.HTTP_404_NOT_FOUND)
+    access_token = str(AccessToken.for_user(user))
+
+    # Generate QR code
+    img = qrcode.make(access_token)
+
+    # Save the image to an in-memory file (BytesIO)
+    buffer = BytesIO()
+    img.save(buffer)
+    buffer.seek(0)
+
+    # Return the QR code image as an HTTP response
+    return HttpResponse(buffer, content_type='image/png')
+
+
+@api_view(['POST'])
+def code(request):
+    token = request.data['token']
+    try:
+        access_token = AccessToken(token)
+        user = User.objects.get(id=access_token['user_id'])
+    except Exception as e:
+        return Response({'message': 'failed'}, status=status.HTTP_400_BAD_REQUEST)
+
+    employee = Employee.objects.filter(user=user).first()
+    data = {
+        'office_lat': employee.location.latitude,
+        'office_lon': employee.location.longitude,
+    }
+
+    return Response(data, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -226,3 +270,18 @@ def delete(request):
 
     return Response({'message': "delete"}, status=status.HTTP_200_OK)
 
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def today(request):
+    employees = Employee.objects.all()
+    today_date = datetime.now().date()
+    present = 0
+    absent = 0
+    for employee in employees:
+        last_attendance = Attendance.objects.filter(user=employee['id']).order_by('-check_in').first()
+        if last_attendance is None or last_attendance.check_in.date() != today_date:
+            absent += 1
+        else:
+            present += 1
+    return Response({'present':present, 'absent':absent}, status=status.HTTP_200_OK)
