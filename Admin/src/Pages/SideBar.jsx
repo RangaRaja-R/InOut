@@ -10,7 +10,7 @@ function SideBar() {
   }
   return (
     <>
-        <div className='side-bar-icon' onClick={()=>seticon(!icon)}>Icon</div>
+        <div className='side-bar-icon' onClick={()=>seticon(!icon)}> I am the side bar Icon</div>
 
     {icon?
     <div className='side-bar'>
