@@ -37,6 +37,22 @@ class AuthService {
     validate(email) {
         return this.axios.post(API_URL + '/validate', { "email": email });
     }
+    async getQrCode(email) {
+        try {
+            // Set responseType to 'blob' to correctly handle the binary data
+            const res = await this.axios.get(API_URL + "/get-code/" + email, {
+                responseType: 'blob' // Expect a Blob response
+            });
+            
+            const blob = res.data; // The response data will be a Blob
+            const imageObjectUrl = URL.createObjectURL(blob); // Create an object URL from the Blob
+            return imageObjectUrl; // Return the image URL
+        } catch (error) {
+            console.error('Error fetching QR code:', error);
+            throw error; // Rethrow the error for further handling if needed
+        }
+    }
+    
 
 
 

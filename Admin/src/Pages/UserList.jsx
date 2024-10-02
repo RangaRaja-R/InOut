@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers } from '../Redux/actions/UserListAction';
 import '../Style/UserList.css';
 import { useNavigate } from 'react-router-dom';
-import { validate } from '../Redux/actions/AuthAction';
+import { getQrCode, validate } from '../Redux/actions/AuthAction';
 
 function UserList() {
   const navigate = useNavigate();
@@ -11,9 +11,12 @@ function UserList() {
   const selector = useSelector(state => state.user);
   const userlist = useSelector(state => state.users);
 
-  // State to track QR code visibility
+  
   const [qrVisible, setQrVisible] = useState(false);
-  const [qrEmail, setQrEmail] = useState(null); // Store email for displaying the QR code
+  const [qrData, setQrData] = useState({
+      email:null,
+      name:null,
+}); 
 
   useEffect(() => {
     if (selector.user) {
@@ -64,19 +67,20 @@ function UserList() {
     return formattedDateTime;
   };
 
-  // Show QR code for the selected email
-  const showTheQr = (email) => {
-    setQrEmail(email); // Set email for QR code generation (if required)
-    setQrVisible(true); // Show the QR code modal
+  
+  const showTheQr = (email,name) => {
+    setQrData({email:email,name:name}); 
+    dispatch(getQrCode(email));
+    setQrVisible(true); 
   };
 
-  // Hide the QR code modal
+  
   const handleCancelQr = () => {
     setQrVisible(false);
-    setQrEmail(null); // Clear email when the modal is closed
+    setQrData(null); 
   };
 
-  // Fallback to exampleUsers if userlist.users is null or empty
+
   const usersToShow = userlist.users && userlist.users.length > 0 ? userlist.users : [
     { name: 'John Doe', email: 'john@example.com', check_in: '2024-10-01T09:30:00', check_out: '2024-10-01T17:00:00' ,status:1},
     { name: 'Jane Smith', email: 'jane@example.com', check_in: '2024-10-01T09:45:00', check_out: '2024-10-01T16:50:00' ,status:0},
@@ -106,27 +110,28 @@ function UserList() {
             <tr key={index} className="table-row">
               <td>{u.name}</td>
               <td>{u.email}</td>
-              <td>{u.email}</td>
+              <td>{u.id}</td>
               <td>{stampConverter(u.check_in,1)}</td>
               <td>{u.status?"Active":"Inactive"}</td>
               <td>{stampConverter(u.check_in,0)}</td>
               <td>{stampConverter(u.check_out,0)}</td>
               <td>
                 <button className="offsite-button" onClick={() => handleOffSite(u.email)}>Off Site</button>
-                <button className="offsite-button" onClick={() => showTheQr(u.email)}>Qr Code</button>
+                <button className="offsite-button" onClick={() => showTheQr(u.email,u.name)}>Qr Code</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Conditionally render QR code modal */}
       {qrVisible && (
         <div className="qr-code-modal">
           <div className="qr-code-content">
-            <span className="qr-code-title">QR Code for {qrEmail}</span>
-            <img 
-              src="https://img.freepik.com/free-vector/scan-me-qr-code_78370-2915.jpg?size=338&ext=jpg&ga=GA1.1.1819120589.1727654400&semt=ais_hybrid" // Replace this with actual QR code image or dynamically generate it
+            <span className="qr-code-title">QR Code for {qrData.name}</span>
+           
+            
+             <img 
+              src={selector.img}
               alt="QR Code"
               className="qr-code-image"
             />

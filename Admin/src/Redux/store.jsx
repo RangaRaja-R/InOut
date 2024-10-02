@@ -6,6 +6,6 @@ export const API_URL = "http://localhost:8000";
 export default configureStore({
     reducer:{
         users: UserListReducer,
-        user: AuthReducer
+        user: AuthReducer 
     }
 });

@@ -32,3 +32,17 @@ export const validate = (email) => async (dispatch, getState) => {
         console.log(e);
     }
 }
+export const getQrCode=(email)=>async(dispatch,getstate)=>{
+    try{
+        const img=await serv.getQrCode(email);
+        console.log(img);
+        if(img){
+             dispatch({type:"ADD_IMG",payload:img})
+        }
+        else{
+            console.log("no image");    
+        }
+    }catch(er){
+        console.log("error in qr geting")
+    }
+}

@@ -8,6 +8,4 @@ class UserListService{
         })
         }
 }
-
-}
 export default new UserListService();
