@@ -1,8 +1,11 @@
 import React from 'react';
 import '../Style/Profile.css'; // Import the CSS file
+import { useSelector } from 'react-redux';
 
 const Profile = () => {
-    const userInfo = {
+    const selector=useSelector(state=>state.user);
+    console.log(selector.user)
+    const userInfo = selector.user?selector.user:{
         id: 501,
         name: "Sathya",
         email: "admin@gmail.com",
