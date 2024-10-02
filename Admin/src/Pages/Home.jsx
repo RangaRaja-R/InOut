@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState ,useEffect} from 'react'
 import {Chart, ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale, PointElement, LineElement} from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import axios from "axios"
+
+import { useDispatch, useSelector } from 'react-redux';
 
 Chart.register(
   ArcElement, 
@@ -20,6 +23,27 @@ Chart.defaults.plugins.legend.title.display = true;
 Chart.defaults.plugins.legend.title.font = 'Helvetica Neue';
 
 function Home() {
+  const selector = useSelector(state => state.user);
+  const [today,setToday]=useState({
+    present:0,
+    absent:0
+
+  });
+  const todayAttendance = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/today');
+      const data = response.data; // Axios automatically parses the response
+      console.log(data); // Log the parsed response data
+    } catch (error) {
+      console.error('Error fetching today\'s attendance:', error);
+    }
+  };
+  
+  useEffect(() => {
+    if(selector.user){
+    todayAttendance();}
+  }, []);
+  
   return (
     <div className="home-container">
       <div>InOut</div>
@@ -35,7 +59,7 @@ function Home() {
           data={{
             labels: ['Active', 'Inactive'],
             datasets: [{
-              data: [60, 40],
+              data: [today.present===0?90:today.present, today.absent===0?10:today.absent],
               backgroundColor: [
                 'rgb(0, 197, 0)',
                 'rgb(204, 223, 243)'
@@ -69,7 +93,7 @@ function Home() {
             data={{
               labels: ['Present', 'Absent'],
               datasets: [{
-                data: [60, 40],
+                data: [today.present===0?90:today.present, today.absent===0?10:today.absent],
                 backgroundColor: [
                   'rgb(0, 197, 0)',
                   'rgb(204, 223, 243)'

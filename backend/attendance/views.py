@@ -274,10 +274,11 @@ def delete(request):
 @permission_classes([IsAdminUser])
 def today(request):
     employees = Employee.objects.all()
+    serializer = EmployeeSerializer(employees, many=True)
     today_date = datetime.now().date()
     present = 0
     absent = 0
-    for employee in employees:
+    for employee in serializer.data:
         last_attendance = Attendance.objects.filter(user=employee['id']).order_by('-check_in').first()
         if last_attendance is None or last_attendance.check_in.date() != today_date:
             absent += 1
