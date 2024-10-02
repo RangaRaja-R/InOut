@@ -5,7 +5,7 @@ urlpatterns = [
     path('register', views.register, name='register'),  # only admins
     path('login', views.login, name='login'),
     path('code', views.code, name='code'), # only admins
-    path('get-code', views.get_code, name='get_code'),
+    path('get-code/<str:email>', views.get_code, name='get_code'),
     path('logout', views.logout, name='logout'),
     path('all', views.employee_list, name='all'),  # only admins
     path('locations', views.locations),# only admins

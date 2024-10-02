@@ -69,10 +69,9 @@ def register(request):
         return Response({'message': 'failed'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAdminUser])
-def get_code(request):
-    email = request.data['email']
+def get_code(request, email):
     user = User.objects.filter(email=email).first()
 
     if user is None:
