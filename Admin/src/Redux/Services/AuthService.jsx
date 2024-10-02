@@ -8,7 +8,7 @@ class AuthService {
         })
     }
     login(email, password) {
-        return this.axios.post(API_URL + '/company/login', {
+        return this.axios.post(API_URL + '/login', {
             email,
             password
         })

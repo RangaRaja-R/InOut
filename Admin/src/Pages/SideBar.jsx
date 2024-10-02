@@ -1,12 +1,23 @@
 import React, { useState } from 'react'
-
+import { useDispatch,useSelector } from 'react-redux';
+import { logout } from '../Redux/actions/AuthAction';
 function SideBar() {
+  const dispatch = useDispatch();
+  
+  const selector=useSelector(state=>state.user);
   const [icon,seticon]=useState(false);
   const navToEmployeList=()=>{
     window.location.href="/#/employeeList"
   }
   const navToProfile=()=>{
     window.location.href="/#/Profile"
+  }
+  const logOutHandle=()=>{
+    console.log(selector.user);
+    dispatch(logout());
+    console.log(selector.user);
+    window.location.href=""
+
   }
   return (
     <>
@@ -23,8 +34,8 @@ function SideBar() {
                     <h3 onClick={navToEmployeList}>Employee List </h3>
             </div>
 
-            <div className='log-out'>Log out</div>
-    </div>:<></>
+            <div className='log-out' onClick={logOutHandle}>Log out</div>
+    </div>:null
     }
     </>
   )

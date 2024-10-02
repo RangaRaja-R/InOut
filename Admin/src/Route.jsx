@@ -11,16 +11,17 @@ import AddUser from './Pages/AddUser'
 import Attendance from './Pages/Attendance'
 import SideBar from './Pages/SideBar'
 import Profile from './Pages/Profile'
-
+import { useDispatch, useSelector} from "react-redux";
 function Routing() {
+      
+  const selectorUser=useSelector(state=>state.user);
   return (
     <>
-
-    <SideBar/>
+    {selectorUser.user ? <SideBar/> : null}
     
    <Routes>
-    <Route path="/" element={<Home />} />
-    <Route path="/admin-sign-in" element={<AdminLogin />} />
+    <Route path="/" element={<AdminLogin />} />
+    <Route path="/home" element={<Home />} />
     <Route path="/department-list" element={<DepartmentList/>}/>
     <Route path="/employeeList" element={<UserList/>}/>
     <Route path='/offsite' element={<OffSite/> } />

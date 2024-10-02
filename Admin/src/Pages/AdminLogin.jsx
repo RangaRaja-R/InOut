@@ -21,7 +21,7 @@ function AdminLogin() {
     
   }
   if(selector.user!==null){
-   navi("/user-list")} 
+   navi("/home")} 
   return (
       <div className='LoginBox'>
         <div className='LoginHead'>
