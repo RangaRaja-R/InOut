@@ -58,6 +58,7 @@ function Home() {
   return (
     <div className="home-container">
       <div className="title-container"></div>
+      <div className="head"><p>InOut</p></div>
 
       <div className="chart">
         <div className="Total-emp">
@@ -85,7 +86,7 @@ function Home() {
                   ],
                   backgroundColor: ["rgb(0, 197, 0)", "rgb(204, 223, 243)"],
                   borderWidth: 2,
-                  radius: "30%",
+                  radius: "40%",
                   cutout: "70%",
                 },
               ],
@@ -126,7 +127,7 @@ function Home() {
                   ],
                   backgroundColor: ["rgb(0, 197, 0)", "rgb(204, 223, 243)"],
                   borderWidth: 2,
-                  radius: "30%",
+                  radius: "40%",
                   cutout: "70%",
                 },
               ],
