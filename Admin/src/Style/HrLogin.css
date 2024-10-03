@@ -1,40 +1,57 @@
-.LoginHead{
-    text-align: center;
-}
 
-.LoginFields{
-}
-
-.LoginBox{
+.LoginBox {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - 70px);
-    width: 100vw;
-}
-
-.InputField{
-    height: 30px;
-    background-color: #fff;
-    color: #242424;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Full viewport height */
+    margin: auto;
+    width: 50%; 
+   
+  }
+  
+  .LoginHead {
+    background-color: white;
+    padding: 30px 60px; /* Padding inside the login box */
+    border-radius: 10px; /* Rounded corners */
+    text-align: center; /* Center text in the login header */
+  }
+  
+  .LoginFields {
+    display: flex;
+    flex-direction: column; /* Stacks input fields vertically */
+    align-items: center; /* Centers input fields */
+    gap: 15px; /* Adds space between each field */
+  }
+  
+  .InputField {
+    height: 40px; /* Input field height */
+    background-color: #fff; /* White background */
+    color: #242424; /* Dark text color */
     outline: none;
-    border: none;
-}
-
-.InputField:active{
-    outline: none;
-}
-
-.LoginHead{
-    background-color: #d9d9d9;
-    width: 20%;
-    height: 35%;
-}
-
-.LoginButton{
-    background-color: #945757;
-    height: 30px;
-    width: 70px;
-    border-width: 0px;
-    border-radius: 10px;
-}
+    border: 1px solid rgba(0, 0, 0, 0.3); /* Border around input */
+    padding: 0 10px; /* Padding inside the input */
+    width: 260px; /* Width of input field */
+    border-radius: 5px; /* Rounded edges for input fields */
+    font-size: 16px; /* Increase font size */
+  }
+  
+  .InputField:focus {
+    border-color:black; /* Highlight border when focused */
+  }
+  
+  .LoginButton {
+    background-color: black; /* Button background color */
+    height: 50px; /* Button height */
+    width: 100%; /* Full width button */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    color: white; /* Button text color */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-size: 16px; /* Text size */
+    transition: background-color 0.3s ease; /* Smooth background change on hover */
+  }
+  
+  .LoginButton:hover {
+    background-color:black; /* Darker button color on hover */
+  }
+  
