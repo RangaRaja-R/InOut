@@ -17,7 +17,7 @@
 
 .add-user-button {
     margin-bottom: 20px;
-    margin-left: 20px;
+    margin-left: 10px;
     padding: 10px 20px;
     background-color: green;
     color: white;
@@ -30,6 +30,13 @@
     background-color: #0056b3;
 }
 
+.title-InOut-emplist {
+    font-size:20px;
+    line-height: 10px;
+}
+.title-EmployeeList-emplist {
+    line-height: 10px;
+}
 .user-list-table {
     width: 100%;
     border-collapse: collapse;
@@ -43,7 +50,7 @@
 }
 
 .user-list-table th {
-    background-color: #f2f2f2;
+    background-color: #EAEAEA;
     font-weight: bold;
 }
 
@@ -53,7 +60,7 @@
 
 .offsite-button {
     padding: 6px 12px;
-    background-color: #dc3545;
+    background-color: black;
     color: white;
     border: none;
     border-radius: 4px;

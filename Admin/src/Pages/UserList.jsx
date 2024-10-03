@@ -88,8 +88,8 @@ function UserList() {
 
   return (
     <div className="user-list-container">
-      <h1>InOut</h1>
-      <h2>Employee List</h2>
+      <h1 className='title-InOut-emplist'>InOut</h1>
+      <h2 className='title-EmployeeList-emplist'>Employee List</h2>
       <button className="add-user-button" onClick={() => { dispatch(getAllUsers()) }}>Refresh</button>
       <button className="add-user-button" onClick={handleAddUser}>Add User</button>
       <table className="user-list-table">
