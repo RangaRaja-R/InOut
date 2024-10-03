@@ -18,6 +18,14 @@ class BackendUrlActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_api)
+        val sharedPreferences = getSharedPreferences("app_prefs", Context.MODE_PRIVATE);
+        val url = sharedPreferences.getString("backend_url", null)
+
+        if(!url.isNullOrEmpty()){
+            val intent = Intent(this, QRActivity::class.java)
+            startActivity(intent)
+            return
+        }
 
         urlInput = findViewById(R.id.api_url)
         saveButton = findViewById(R.id.btn_connect)
@@ -42,11 +50,11 @@ class BackendUrlActivity : AppCompatActivity() {
         val token = sharedPreferences.getString("jwt_token", null)
         if (token == null) {
             // No token, navigate to the Login screen
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, QRActivity::class.java)
             startActivity(intent)
         } else {
             // Token exists, navigate to the Dashboard
-            val intent = Intent(this, DashboardActivity::class.java)
+            val intent = Intent(this, TempActivity::class.java)
             startActivity(intent)
         }
         finish() // Close the current activity
