@@ -17,17 +17,21 @@ function Routing() {
   const selectorUser=useSelector(state=>state.user);
   return (
     <>
-    {selectorUser.user ? <SideBar/> : null}
+    {selectorUser.user &&( <SideBar/>)}
     
    <Routes>
     <Route path="/" element={<AdminLogin />} />
-    <Route path="/home" element={<Home />} />
-    <Route path="/department-list" element={<DepartmentList/>}/>
-    <Route path="/employeeList" element={<UserList/>}/>
-    <Route path='/offsite' element={<OffSite/> } />
-    <Route path="/add-user" element={<AddUser/>}/>
-    <Route path="/profile" element={<Profile/>}/>
-    <Route path="/attendance" element={<Attendance/>}/>
+    {selectorUser.user &&
+      (<>
+        <Route path="/home" element={<Home />} />
+        <Route path="/department-list" element={<DepartmentList/>}/>
+        <Route path="/employeeList" element={<UserList/>}/>
+        <Route path='/offsite' element={<OffSite/> } />
+        <Route path="/add-user" element={<AddUser/>}/>
+        <Route path="/profile" element={<Profile/>}/>
+        <Route path="/attendance" element={<Attendance/>}/>
+      </>)
+    }
    </Routes>
     </>
   )
