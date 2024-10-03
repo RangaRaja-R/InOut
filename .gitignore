@@ -3,3 +3,4 @@ backend/.DS_Store
 .DS_Store
 /backend/.idea
 backend/db.sqlite3
+backend/.env

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector} from "react-redux";
 import { login } from '../Redux/actions/AuthAction';
 import '../Style/HrLogin.css';
-import Init from '../Components/Init';
+
 
 
 function HrLogin() {
@@ -25,6 +25,7 @@ function HrLogin() {
    navi("/home")} 
   return (
       <div className='LoginBox'>
+       
         <div className='LoginHead'>
           <h2>Login</h2>
           <div className='LoginFields'>

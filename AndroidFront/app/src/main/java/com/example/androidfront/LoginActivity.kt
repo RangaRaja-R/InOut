@@ -112,6 +112,7 @@ class LoginActivity : AppCompatActivity() {
                         } else {
                             onFailure("JWT token not found in the response")
                         }
+                        TODO("store office location returned in sharedpreferences, lat:'office_lat', lon:'office_lon'")
                     }
                 }
             }
