@@ -46,3 +46,13 @@ export const getQrCode=(email)=>async(dispatch,getstate)=>{
         console.log("error in qr geting")
     }
 }
+
+export const GetDonutData=()=>async(dispatch,getstate)=>{
+    try{
+        const today=await serv.getDonutData();
+        dispatch({type:"TODAY",payload:today});
+        
+    }catch(er){
+        console.log(er);
+    }
+}

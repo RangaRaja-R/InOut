@@ -52,6 +52,15 @@ class AuthService {
             throw error; // Rethrow the error for further handling if needed
         }
     }
+    async getDonutData(){
+        try{
+            const response = await this.axios.get(API_URL+"/today");
+            return response.data;
+        }
+        catch(er){
+            console.log(er);
+        }
+    }
     
 
 

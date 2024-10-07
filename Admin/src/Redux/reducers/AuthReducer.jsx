@@ -2,7 +2,8 @@ const initialState={
     user:null,
     userType:null,
     validate_msg: null,
-    img:null
+    img:null,
+    today:null,
 }
 
 const AuthReducer=(state=initialState,action)=>{
@@ -36,6 +37,11 @@ const AuthReducer=(state=initialState,action)=>{
             return{
                 ...state,
                 img:null
+            }
+        case "TODAY":
+            return{
+                ...state,
+                today:action.payload
             }
         default:
             return state;
