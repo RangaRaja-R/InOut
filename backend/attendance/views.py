@@ -41,7 +41,7 @@ def register(request):
             user_serializer.is_valid(raise_exception=True)
             user = user_serializer.save()
 
-            if request.data['loc_id']:
+            if 'loc_id' in request.data:
                 location = Location.objects.filter(id=request.data['loc_id']).first()
                 employee = Employee.objects.create(user=user, location=location)
                 employee.save()
