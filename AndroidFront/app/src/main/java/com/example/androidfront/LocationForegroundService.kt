@@ -48,7 +48,6 @@ class LocationForegroundService : Service() {
                 }
             }
         }
-
         startLocationUpdates()
     }
 
@@ -63,14 +62,14 @@ class LocationForegroundService : Service() {
             stopSelf() // Stop service if permission is not granted
             return
         }
-
+        sendDebugNotification("Service Started");
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
     }
 
     private fun handleLocationUpdate(latitude: Double, longitude: Double) {
         val isWithinOffice = isWithinOfficeRadius(latitude, longitude)
         Log.e("Location", "$isWithinOffice lat: $latitude, lon: $longitude")
-
+        sendDebugNotification("$isWithinOffice lat: $latitude, lon: $longitude")
         if (isWithinOffice != checkedIn) {
             checkedIn = isWithinOffice
             sendCheckInOutBroadcast(checkedIn)

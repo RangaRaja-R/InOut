@@ -13,7 +13,8 @@ android {
     defaultConfig {
         applicationId = "com.example.androidfront"
         minSdk = 24
-        targetSdk = 34
+        //noinspection OldTargetApi
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -59,7 +60,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
@@ -67,13 +67,11 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
 
     // Additional dependencies
     implementation(libs.play.services.location)
     implementation(libs.glide)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.core.ktx.v1100)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.gson)
     implementation(libs.okhttp)

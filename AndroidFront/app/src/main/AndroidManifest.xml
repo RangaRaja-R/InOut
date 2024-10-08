@@ -11,7 +11,7 @@
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".QRActivity"/>
-        <activity android:name=".TempActivity"/>
+        <activity android:name=".TempActivity" android:exported="false"/>
     </application>
 
 </manifest>
