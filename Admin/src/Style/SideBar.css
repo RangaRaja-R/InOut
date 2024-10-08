@@ -1,0 +1,45 @@
+/* Styling for the sidebar */
+.side-bar {
+  background-color: black;
+  color: white;
+  padding: 40px;
+  width: 250px;
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: -250px; /* Initially hidden off the screen */
+  transition: left 0.3s ease; /* Smooth slide-in transition */
+  z-index: 1000;
+
+}
+
+/* Show the sidebar when the menu icon is clicked */
+.side-bar.show {
+  left: 0; /* Slide in the sidebar */
+}
+
+/* Menu icon */
+.side-bar-icon {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  cursor: pointer;
+  z-index: 1100; /* Ensures the icon is above the sidebar */
+  color: white;
+}
+
+/* Move the menu icon inside the sidebar when it opens */
+.side-bar.show .side-bar-icon {
+  position: absolute;
+  left: 210px; /* Adjust to place it inside the sidebar */
+  top: 20px;
+}
+.log-out {
+  display: flex;
+  flex-direction: row;
+  align-items: center; 
+  gap: 10px; 
+}

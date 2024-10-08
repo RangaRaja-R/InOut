@@ -16,7 +16,7 @@ function Routing() {
       
   const selectorUser=useSelector(state=>state.user);
   return (
-    <>
+    <div style={{display:'flex' ,flexDirection:'row'}}>
     {selectorUser.user &&( <SideBar/>)}
     
    <Routes>
@@ -33,7 +33,7 @@ function Routing() {
       </>)
     }
    </Routes>
-    </>
+    </div>
   )
 }
 

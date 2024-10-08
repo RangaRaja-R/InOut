@@ -16,7 +16,7 @@ const Profile = () => {
         <div className='profile'>
             <div className='profile-head-left'>
                 <h2 className='profile-title'>InOut</h2>
-                <h3 className='profile-subtitle'>Profile</h3>
+                <h3 className='profile-subtitle'>PROFILE</h3>
             </div>
             <div className='profile-container'>
                 <h4 className='profile-about-title'>About</h4>

@@ -11,6 +11,8 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
+
+import { GetDonutData } from '../Redux/actions/AuthAction';
 import { Doughnut, Line } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import axios from "axios";
@@ -34,24 +36,18 @@ Chart.defaults.plugins.legend.title.display = true;
 Chart.defaults.plugins.legend.title.font = "Helvetica Neue";
 
 function Home() {
+  const dispatch=useDispatch();
   const selector = useSelector((state) => state.user);
-  const [today, setToday] = useState({
-    present: 0,
-    absent: 0,
+  const [today,setToday]=useState({
+      present:50,
+      absent:50
   });
-  const todayAttendance = async () => {
-    try {
-      const response = await axios.get("http://127.0.0.1:8000/today");
-      const data = response.data; // Axios automatically parses the response
-      console.log(data); // Log the parsed response data
-    } catch (error) {
-      console.error("Error fetching today's attendance:", error);
-    }
-  };
+ 
 
   useEffect(() => {
-    if (selector.user) {
-      todayAttendance();
+    if (selector?.user) {
+        dispatch(GetDonutData());
+
     }
   }, []);
 
@@ -81,8 +77,8 @@ function Home() {
               datasets: [
                 {
                   data: [
-                    today.present === 0 ? 90 : today.present,
-                    today.absent === 0 ? 10 : today.absent,
+                    today.present === 50 ? 90 : today.present,
+                    today.absent === 50 ? 10 : today.absent,
                   ],
                   backgroundColor: ["rgb(0, 197, 0)", "rgb(204, 223, 243)"],
                   borderWidth: 2,
