@@ -1,10 +1,3 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    margin: 0;
-    padding: 20px;
-}
-
 .profile {
     background-color: #ffffff;
     border-radius: 5px;
@@ -44,7 +37,7 @@ body {
     font-size: 20px;
     padding: 6px;
     color: #333;
-    background-color:#EAEAEA;
+    background-color: #eaeaea;
     margin-bottom: 15px;
 }
 
