@@ -5,14 +5,14 @@ django-cors-headers
 django-environ
 djangorestframework
 djangorestframework-simplejwt
-djongo
+djongo==1.3.6
 dnspython
 filelock
 geographiclib
 geopy
 platformdirs
 PyJWT
-pymongo
+pymongo==3.12.1
 pypng
 pytz
 qrcode

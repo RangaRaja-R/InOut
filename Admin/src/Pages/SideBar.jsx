@@ -12,8 +12,8 @@ function SideBar() {
     window.location.href = "/#/employeeList";
   };
 
-  const navToProfile = () => {
-    window.location.href = "/#/Profile";
+  const navToHome = () => {
+    window.location.href = "/#/home";
   };
 
   const logOutHandle = () => {
@@ -33,7 +33,7 @@ function SideBar() {
 
       <div className={`side-bar ${icon ? 'show' : ''}`}>
         <div className='side-bar-center'>
-          <h3 onClick={navToProfile}>Profile</h3>
+          <h3 onClick={navToHome}>Home</h3>
           <h3>Leave / Permission</h3>
           <h3>Approval Requests</h3>
           <h3>Reports</h3>
