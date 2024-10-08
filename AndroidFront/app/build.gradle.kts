@@ -76,4 +76,5 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.okhttp)
     implementation(libs.zxing.android.embedded)
+    implementation(libs.androidx.constraintlayout)
 }

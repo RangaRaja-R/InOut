@@ -65,7 +65,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/dateText"
+                android:id="@+id/currentDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -86,197 +86,170 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                >
 
-                <CheckBox
-                    android:id="@+id/checkInBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@android:color/black"
-                    android:clickable="false"/>
 
                 <TextView
                     android:id="@+id/timeText1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="30dp"
                     android:text="8:10 AM"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/activityText1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/timeText1"
-                    android:layout_marginStart="36dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="Actual check in"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp" />
 
-                <ImageButton
-                    android:id="@+id/iconCheckIn"
-                    android:layout_width="124dp"
-                    android:layout_height="64dp"
+                <RelativeLayout
+                    android:layout_width="166dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/border_2"
-                    android:contentDescription="Check In Icon"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/checkedin" />
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="14dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@drawable/border_1"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/CheckIn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:text="Check In"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/Timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center"
+                        android:text="Time"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </RelativeLayout>
             </RelativeLayout>
 
             <!-- Timeline Entry 2 -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="15dp">
 
-                <CheckBox
-                    android:id="@+id/breakBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@android:color/black"
-                    android:clickable="false"/>
 
                 <TextView
-                    android:id="@+id/timeText2"
+                    android:id="@+id/currentVenue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
                     android:layout_marginTop="16dp"
-                    android:text="30:00:04"
+                    android:text="Venue"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/activityText2"
+                    android:id="@+id/currentTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/timeText2"
                     android:layout_marginStart="36dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="Start 12:05 PM"
+                    android:layout_marginTop="35dp"
+                    android:text="12:05 PM"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
-                <ImageButton
-                    android:id="@+id/iconBreak"
+
+                <TextView
+                    android:id="@+id/currentPeriod"
                     android:layout_width="124dp"
                     android:layout_height="64dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/border_2"
-                    android:contentDescription="Break Icon"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/break_img" />
+                    android:layout_marginEnd="15dp"
+                    android:text="Current Period"
+                    android:background="@drawable/border_1"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                   />
             </RelativeLayout>
 
             <!-- Timeline Entry 3 -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="50dp">
 
-                <CheckBox
-                    android:id="@+id/lunchBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@android:color/black"
-                    android:clickable="false"/>
+
 
                 <TextView
-                    android:id="@+id/timeText3"
+                    android:id="@+id/NextVenue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="36dp"
                     android:layout_marginTop="16dp"
-                    android:text="30:00:04"
+                    android:text="Venue"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/activityText3"
+                    android:id="@+id/NextPeriodTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/timeText3"
                     android:layout_marginStart="36dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="Start 12:05 PM"
+                    android:layout_marginTop="35dp"
+                    android:text="12:05 PM"
                     android:textColor="@android:color/black"
                     android:textSize="14sp" />
 
-                <ImageButton
-                    android:id="@+id/iconAfterBreak"
+                <TextView
+                    android:id="@+id/NextPeriod"
                     android:layout_width="124dp"
                     android:layout_height="64dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/border_2"
-                    android:contentDescription="After Break Icon"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/after_break" />
+                    android:layout_marginEnd="15dp"
+                    android:text="Next Period"
+                    android:background="@drawable/border_1"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    />
             </RelativeLayout>
 
-            <!-- Timeline Entry 4 -->
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <CheckBox
-                    android:id="@+id/checkOutBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@android:color/black"
-                    android:clickable="false"/>
+                android:layout_width="275dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/border_1"
+                android:layout_marginStart="36dp">
 
                 <TextView
-                    android:id="@+id/timeText4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="36dp"
-                    android:layout_marginTop="16dp"
-                    android:text="30:00:04"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp" />
+                    android:id="@+id/leaveRequest"
+                    android:layout_width="297dp"
+                    android:layout_height="41dp"
+                    android:gravity="center"
+                    android:text="Leave Request"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/activityText4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/timeText4"
-                    android:layout_marginStart="36dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="Start 12:05 PM"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp" />
-
-                <ImageButton
-                    android:id="@+id/iconCheckOut"
-                    android:layout_width="124dp"
-                    android:layout_height="64dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/border_2"
-                    android:contentDescription="Check Out Icon"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/check_out" />
             </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="275dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/border_1"
+                android:layout_marginStart="36dp">
+
+                <TextView
+                    android:id="@+id/schedule"
+                    android:layout_width="297dp"
+                    android:layout_height="41dp"
+                    android:gravity="center"
+                    android:text="Schedule"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
