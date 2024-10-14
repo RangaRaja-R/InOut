@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.gson)
+    implementation(libs.kotlinx.datetime)
     implementation(libs.okhttp)
     implementation(libs.zxing.android.embedded)
     implementation(libs.androidx.constraintlayout)

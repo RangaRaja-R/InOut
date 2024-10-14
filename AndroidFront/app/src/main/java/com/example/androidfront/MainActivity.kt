@@ -60,9 +60,9 @@ class DashboardActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
-
-        checkInButton = findViewById(R.id.iconCheckIn)
-        checkOutButton = findViewById(R.id.iconCheckOut)
+//
+//        checkInButton = findViewById(R.id.iconCheckIn)
+//        checkOutButton = findViewById(R.id.iconCheckOut)
         changeApiUrl = findViewById(R.id.appLogo)
         checkInButton.setOnClickListener {
             performCheckIn()

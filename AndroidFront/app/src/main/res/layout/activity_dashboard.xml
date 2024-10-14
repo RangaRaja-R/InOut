@@ -16,6 +16,7 @@
             android:id="@+id/appLogo"
             android:layout_width="50dp"
             android:layout_height="60dp"
+            android:contentDescription="Logo"
             android:scaleType="fitCenter"
             android:background="@color/transparent"
             android:src="@drawable/logo1" />
@@ -80,13 +81,13 @@
             android:layout_height="wrap_content"
             android:background="@drawable/border_2"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="8dp">
 
             <!-- Timeline Entry 1 -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                >
+            >
 
 
                 <TextView
@@ -97,7 +98,7 @@
                     android:layout_marginTop="30dp"
                     android:text="8:10 AM"
                     android:textColor="@android:color/black"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
 
                 <RelativeLayout
@@ -117,7 +118,7 @@
                         android:gravity="center"
                         android:text="Check In"
                         android:textColor="@android:color/black"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"/>
 
                     <TextView
                         android:id="@+id/Timer"
@@ -127,7 +128,7 @@
                         android:gravity="center"
                         android:text="Time"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"/>
                 </RelativeLayout>
             </RelativeLayout>
 
@@ -146,7 +147,7 @@
                     android:layout_marginTop="16dp"
                     android:text="Venue"
                     android:textColor="@android:color/black"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/currentTime"
@@ -156,7 +157,7 @@
                     android:layout_marginTop="35dp"
                     android:text="12:05 PM"
                     android:textColor="@android:color/black"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
 
                 <TextView
@@ -165,12 +166,12 @@
                     android:layout_height="64dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="15dp"
-                    android:text="Current Period"
                     android:background="@drawable/border_1"
+                    android:gravity="center"
+                    android:text="Current Period"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:gravity="center"
-                   />
+                />
             </RelativeLayout>
 
             <!-- Timeline Entry 3 -->
@@ -178,7 +179,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="50dp">
-
 
 
                 <TextView
@@ -189,7 +189,7 @@
                     android:layout_marginTop="16dp"
                     android:text="Venue"
                     android:textColor="@android:color/black"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/NextPeriodTime"
@@ -199,7 +199,7 @@
                     android:layout_marginTop="35dp"
                     android:text="12:05 PM"
                     android:textColor="@android:color/black"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/NextPeriod"
@@ -207,20 +207,20 @@
                     android:layout_height="64dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="15dp"
-                    android:text="Next Period"
                     android:background="@drawable/border_1"
+                    android:gravity="center"
+                    android:text="Next Period"
                     android:textColor="@color/black"
                     android:textSize="15sp"
-                    android:gravity="center"
-                    />
+                />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="36dp"
                 android:layout_marginBottom="15dp"
-                android:background="@drawable/border_1"
-                >
+                android:background="@drawable/border_1">
 
                 <TextView
                     android:id="@+id/leaveRequest"
@@ -229,15 +229,15 @@
                     android:gravity="center"
                     android:text="Leave Request"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"/>
 
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="36dp"
                 android:layout_marginBottom="15dp"
-                android:background="@drawable/border_1"
-                >
+                android:background="@drawable/border_1">
 
                 <TextView
                     android:id="@+id/schedule"
@@ -246,7 +246,7 @@
                     android:gravity="center"
                     android:text="Schedule"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"/>
 
             </RelativeLayout>
 

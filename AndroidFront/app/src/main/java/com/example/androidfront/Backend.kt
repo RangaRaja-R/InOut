@@ -12,8 +12,9 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
-import com.example.androidfront.LoginActivity
-import com.example.androidfront.DashboardActivity
+import okhttp3.*
+import okhttp3.OkHttpClient
+import okio.use
 
 class BackendUrlActivity : AppCompatActivity() {
 
@@ -33,7 +34,7 @@ class BackendUrlActivity : AppCompatActivity() {
 
         requestLocationPermissions()
 
-        if(!url.isNullOrEmpty()){
+        if(!url.isNullOrEmpty() && pingCheck(url)){
             val intent = Intent(this, QRActivity::class.java)
             startActivity(intent)
             return
@@ -55,6 +56,24 @@ class BackendUrlActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter a valid URL", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun pingCheck(url: String): Boolean {
+        val client = OkHttpClient()
+        val request = Request.Builder().url("$url/ping").get().build()
+        var ans  = false;
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: java.io.IOException) {
+                Log.e("backend", "communication failed")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    ans = it.isSuccessful
+                }
+            }
+        })
+        return ans;
     }
 
     private fun checkLoginStatus() {

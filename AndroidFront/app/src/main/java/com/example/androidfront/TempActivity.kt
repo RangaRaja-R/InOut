@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -15,8 +16,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 class TempActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var checkedInBox: CheckBox
-    private lateinit var checkedOutBox: CheckBox
+    private lateinit var status: TextView
+    private lateinit var statusReceiver: BroadcastReceiver
 
     companion object{
         const val LOCATION_REQUEST_CODE = 1001;
@@ -32,10 +33,18 @@ class TempActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences("location", MODE_PRIVATE)
         checkedIn = sharedPreferences.getBoolean("checked_in", false)
-        checkedInBox = findViewById(R.id.checkInBox)
-        checkedOutBox = findViewById(R.id.checkOutBox)
-
-//        requestLocationPermissions()
+        status = findViewById(R.id.CheckIn)
+        status.text = "status"
+        statusReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val checkedIn = intent.getStringExtra("status")
+                runOnUiThread {
+                    status.text = checkedIn
+                }
+            }
+        }
+        val filter = IntentFilter("com.example.androidfront")
+        registerReceiver(statusReceiver, filter)
         startLocationService()
     }
 
@@ -139,5 +148,6 @@ class TempActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopLocationService();
+        unregisterReceiver(statusReceiver)
     }
 }

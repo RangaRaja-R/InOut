@@ -19,6 +19,9 @@ from .utils import is_within_radius
 
 SECRET_KEY = "hello"
 
+@api_view(['GET'])
+def ping(request):
+    return Response({'message':'success'},status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])

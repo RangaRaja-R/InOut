@@ -44,6 +44,7 @@ class LocationForegroundService : Service() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 locationResult.lastLocation?.let { location ->
+                    Log.e("Location", "lat:${location.latitude}, lon:${location.longitude}")
                     handleLocationUpdate(location.latitude, location.longitude)
                 }
             }
@@ -69,10 +70,21 @@ class LocationForegroundService : Service() {
     private fun handleLocationUpdate(latitude: Double, longitude: Double) {
         val isWithinOffice = isWithinOfficeRadius(latitude, longitude)
         Log.e("Location", "$isWithinOffice lat: $latitude, lon: $longitude")
-        sendDebugNotification("$isWithinOffice lat: $latitude, lon: $longitude")
         if (isWithinOffice != checkedIn) {
             checkedIn = isWithinOffice
-            sendCheckInOutBroadcast(checkedIn)
+            // get current time
+            /*
+            8.45 check in/checked in
+            12.30 - 1.30 Lunch
+            1.30 after check in/checked in
+            4.30 checked out
+            */
+            if(checkedIn){
+                sendStatusBroadCast("Checked In")
+            }else{
+                sendStatusBroadCast("Checked out")
+            }
+
             sendLocation(latitude, longitude,
                 onSuccess = {
                     Log.d("LocationService", "Check-in/Check-out successful.")
@@ -146,14 +158,8 @@ class LocationForegroundService : Service() {
         })
     }
 
-    private fun sendCheckInOutBroadcast(checkedIn: Boolean) {
-        val intent = Intent("com.example.LOCATION_STATUS_UPDATE")
-        intent.putExtra("checkedIn", checkedIn)
-        sendBroadcast(intent)
-    }
-
     private fun isWithinOfficeRadius(latitude: Double, longitude: Double): Boolean {
-        val sharedPreferences = getSharedPreferences("Location", MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("location", MODE_PRIVATE)
         val officeLat = sharedPreferences.getFloat("office_lat", 0.0F).toDouble();
         val officeLon = sharedPreferences.getFloat("office_lon", 0.0F).toDouble();
         val officeLocation = Location("office").apply {
@@ -166,6 +172,8 @@ class LocationForegroundService : Service() {
         }
 
         val distance = currentLocation.distanceTo(officeLocation)
+        sendDebugNotification("$distance lat: $latitude, lon: $longitude")
+        Log.e("Location", "$distance lat: $latitude, lon: $longitude")
         if(checkedIn){
             return distance <= 100 // exit radius
         }
@@ -214,6 +222,12 @@ class LocationForegroundService : Service() {
 
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(2, notification)
+    }
+
+    private fun sendStatusBroadCast(status: String){
+        val intent = Intent("com.example.androidfront")
+        intent.putExtra("status", status)
+        sendBroadcast(intent)
     }
 
     override fun onBind(intent: Intent?): IBinder? {
