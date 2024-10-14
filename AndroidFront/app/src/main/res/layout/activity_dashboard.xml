@@ -216,15 +216,15 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="275dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/border_1"
-                android:layout_marginStart="36dp">
+                >
 
                 <TextView
                     android:id="@+id/leaveRequest"
-                    android:layout_width="297dp"
+                    android:layout_width="match_parent"
                     android:layout_height="41dp"
                     android:gravity="center"
                     android:text="Leave Request"
@@ -233,15 +233,15 @@
 
             </RelativeLayout>
             <RelativeLayout
-                android:layout_width="275dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="15dp"
                 android:background="@drawable/border_1"
-                android:layout_marginStart="36dp">
+                >
 
                 <TextView
                     android:id="@+id/schedule"
-                    android:layout_width="297dp"
+                    android:layout_width="match_parent"
                     android:layout_height="41dp"
                     android:gravity="center"
                     android:text="Schedule"
