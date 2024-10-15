@@ -12,7 +12,7 @@ import {
   LineElement,
 } from "chart.js";
 
-import { GetDonutData } from '../Redux/actions/AuthAction';
+import { GetDonutData } from "../Redux/actions/AuthAction";
 import { Doughnut, Line } from "react-chartjs-2";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import axios from "axios";
@@ -36,25 +36,25 @@ Chart.defaults.plugins.legend.title.display = true;
 Chart.defaults.plugins.legend.title.font = "Helvetica Neue";
 
 function Home() {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const selector = useSelector((state) => state.user);
-  const [today,setToday]=useState({
-      present:50,
-      absent:50
+  const [today, setToday] = useState({
+    present: 50,
+    absent: 50,
   });
- 
 
   useEffect(() => {
     if (selector?.user) {
-        dispatch(GetDonutData());
-
+      dispatch(GetDonutData());
     }
   }, []);
 
   return (
     <div className="home-container">
       <div className="title-container"></div>
-      <div className="head"><p>InOut</p></div>
+      <div className="head">
+        <p>InOut</p>
+      </div>
 
       <div className="chart">
         <div className="Total-emp">
@@ -80,9 +80,9 @@ function Home() {
                     today.present === 50 ? 90 : today.present,
                     today.absent === 50 ? 10 : today.absent,
                   ],
-                  backgroundColor: ["rgb(0, 197, 0)", "rgb(204, 223, 243)"],
+                  backgroundColor: ["rgb(0, 197, 0)", "#F2543D"],
                   borderWidth: 2,
-                  radius: "40%",
+                  radius: "100%",
                   cutout: "70%",
                 },
               ],
@@ -121,9 +121,9 @@ function Home() {
                     today.present === 0 ? 90 : today.present,
                     today.absent === 0 ? 10 : today.absent,
                   ],
-                  backgroundColor: ["rgb(0, 197, 0)", "rgb(204, 223, 243)"],
+                  backgroundColor: ["rgb(0, 197, 0)", "#F2543D"],
                   borderWidth: 2,
-                  radius: "40%",
+                  radius: "100%",
                   cutout: "70%",
                 },
               ],
