@@ -3,12 +3,12 @@
     background-color: black;
     color: white;
     width: calc(250px - 80px);
-    height: calc(100vh - 100px);
-    padding: 50px 40px;
+    height: 100%;
+   
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: relative;
+    position: fixed;
     top: 0;
     left: -250px; /* Initially hidden off the screen */
     transition: left 0.3s ease; /* Smooth slide-in transition */
@@ -18,6 +18,7 @@
 /* Show the sidebar when the menu icon is clicked */
 .side-bar.show {
     left: 0; /* Slide in the sidebar */
+    padding: 0px 50px;
 }
 
 /* Menu icon */
@@ -40,5 +41,5 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: 1px;
 }
