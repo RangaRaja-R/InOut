@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { postUser } from '../Redux/actions/UserListAction';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../Style/AddUser.css'; // Import the CSS file
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { postUser } from "../Redux/actions/UserListAction";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../Style/AddUser.css"; // Import the CSS file
 
 function AddUser() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [data, setData] = useState({
     loc_id: null,
-    office_name: '',
+    office_name: "",
     latitude: 0.0,
     longitude: 0.0,
     user: {
-      name: '',
-      email: '',
-      password: '',
-      role: "employee"
-    }
+      name: "",
+      email: "",
+      password: "",
+      role: "employee",
+    },
   });
   const [locations, setLocations] = React.useState([]);
   const [name, setName] = useState(false);
@@ -29,7 +29,7 @@ function AddUser() {
       getLocation();
     }
     dispatch(postUser(data));
-    navigate("/user-list");
+    navigate("/employeeList");
   };
 
   const getLocation = () => {
@@ -55,11 +55,11 @@ function AddUser() {
         console.log(res);
         setLocations(res.data);
       } catch (err) {
-        console.log(err)
+        console.log(err);
       }
     }
-    fetchLocations()
-  }, [])
+    fetchLocations();
+  }, []);
 
   return (
     <div className="add-user-container">
@@ -68,25 +68,34 @@ function AddUser() {
         <input
           type="text"
           placeholder="Username"
-          onChange={(e) => setData({ ...data, user: { ...data.user, name: e.target.value } })}
+          onChange={(e) =>
+            setData({ ...data, user: { ...data.user, name: e.target.value } })
+          }
           required
           className="form-input"
         />
         <input
           type="email"
           placeholder="Email"
-          onChange={(e) => setData({ ...data, user: { ...data.user, email: e.target.value } })}
+          onChange={(e) =>
+            setData({ ...data, user: { ...data.user, email: e.target.value } })
+          }
           required
           className="form-input"
         />
         <input
           type="password"
           placeholder="Password"
-          onChange={(e) => setData({ ...data, user: { ...data.user, password: e.target.value } })}
+          onChange={(e) =>
+            setData({
+              ...data,
+              user: { ...data.user, password: e.target.value },
+            })
+          }
           required
           className="form-input"
         />
-        {name &&
+        {name && (
           <input
             type="text"
             placeholder="Location Name"
@@ -94,7 +103,7 @@ function AddUser() {
             required
             className="form-input"
           />
-        }
+        )}
         <select
           onChange={(e) => {
             if (e.target.value === "Current Location") {
@@ -106,14 +115,16 @@ function AddUser() {
               loc_id: locations[e.target.value].id,
               latitude: locations[e.target.value].latitude,
               longitude: locations[e.target.value].longitude,
-            })
+            });
             console.log(locations[e.target.value]);
             setName(false);
           }}
           defaultValue={"Select Location"}
           className="form-input"
         >
-          <option value="Select Location" disabled>Select Location</option>
+          <option value="Select Location" disabled>
+            Select Location
+          </option>
           <option value="Current Location">Current Location</option>
           {locations.map((location, index) => (
             <option key={index} value={index}>
@@ -122,7 +133,9 @@ function AddUser() {
           ))}
         </select>
         {/* <button type="button" onClick={getLocation} className="location-button">Current Location</button> */}
-        <button type="submit" className="submit-button">Add User</button>
+        <button type="submit" className="submit-button">
+          Add User
+        </button>
       </form>
     </div>
   );
