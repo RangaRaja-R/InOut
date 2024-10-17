@@ -51,6 +51,7 @@ class Location(models.Model):
     longitude = models.FloatField(blank=False)
 
 
+
 class Offsite(models.Model):
     name = models.CharField(max_length=100, blank=True)
     latitude = models.FloatField(blank=False)
@@ -60,8 +61,8 @@ class Offsite(models.Model):
 
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    location = models.OneToOneField(Location, on_delete=models.CASCADE)
-    offsite = models.OneToOneField(Offsite, on_delete=models.CASCADE, null=True)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    offsite = models.ForeignKey(Offsite, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.user.name

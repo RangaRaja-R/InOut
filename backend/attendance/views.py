@@ -1,3 +1,5 @@
+import sys
+import traceback
 from datetime import datetime, timezone
 import json
 import hashlib
@@ -39,15 +41,23 @@ def other_register(request):
 def register(request):
     try:
         with transaction.atomic():
+            # check if user exists
+            if User.objects.filter(email=request.data['email']).exists():
+                return Response({'message': 'email already exists'}, status=status.HTTP_400_BAD_REQUEST)
             # Validate and save the user
-            user_serializer = UserSerializer(data=request.data['user'])
+            user_serializer = UserSerializer(data=request.data.get('user'))
             user_serializer.is_valid(raise_exception=True)
+            print("user created")
             user = user_serializer.save()
-
-            if 'loc_id' in request.data:
-                location = Location.objects.filter(id=request.data['loc_id']).first()
+            loc_id = request.data.get('loc_id')
+            if loc_id:
+                location = Location.objects.filter(id=loc_id).first()
+                print("Location retrieved")
+                print(f"user: {user}")
+                print(f"location: {location}")
                 employee = Employee.objects.create(user=user, location=location)
-                employee.save()
+                print("Employee saved")
+
             else:
                 # Create and save the location
                 location_data = {
@@ -57,17 +67,21 @@ def register(request):
                 }
                 location = Location.objects.create(**location_data)
                 location.save()
+                print("Location created")
                 # Associate the user with the employee profile
-                employee = Employee.objects.create(user=user, location=location)
+                employee = Employee()
+                employee.user = user
+                employee.location = location
                 employee.save()
-
-                print("done creating employee")
+                print("Employee created")
+        print("done creating employee")
 
         return Response({'message': 'success'}, status=status.HTTP_201_CREATED)
 
     except ValidationError as ve:
         return Response(ve.detail, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
+        traceback.print_exc()
         print(f"Unexpected error: {e}")
         return Response({'message': 'failed'}, status=status.HTTP_400_BAD_REQUEST)
 
